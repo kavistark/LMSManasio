@@ -1,0 +1,26 @@
+{% extends 'superuser_admin/base.html' %}
+{% block content %}
+
+<div class="glass" style="padding:30px;">
+  <h2>📋 Admin Users</h2>
+
+  <table style="width:100%;margin-top:20px;border-collapse:collapse;">
+    <tr style="background:#2563eb;color:white;">
+      <th style="padding:12px;">Username</th>
+      <th>Password</th>
+    </tr>
+
+    {% for admin in admins %}
+    <tr style="background:white;">
+      <td style="padding:12px;">{{ admin.username }}</td>
+      <td>********</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="2">No admins found</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

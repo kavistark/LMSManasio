@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ admin_name }}</h2>
+
+    <ul>
+        <li><a href="#">Add Student</a></li>
+        <li><a href="#">Manage Students</a></li>
+        <li><a href="{% url 'admin_logout' %}">Logout</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Portal Login</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #1e88e5;
+      --secondary: #20c997;
+      --glass-bg: rgba(255, 255, 255, 0.22);
+      --glass-border: rgba(255, 255, 255, 0.35);
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --error: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #dbeafe, #d1fae5);
+    }
+
+    /* Main Glass Container */
+    .container {
+      max-width: 960px; 
+      width: 95%;
+      display: flex;
+      border-radius: 26px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+    }
+
+    /* Left Panel */
+    .illustration {
+      flex: 1;
+      padding: 3rem;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+    }
+    .illustration img {
+      width: 200px;
+      margin-bottom: 1rem;
+    }
+
+    .illustration h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .illustration p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .illustration h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .illustration p {
+      font-size: 14px;
+      opacity: 0.95;
+      line-height: 1.6;
+      max-width: 300px;
+    }
+
+    /* Right Panel */
+    .login-form {
+      flex: 1;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-header h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    .form-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+
+    /* Inputs */
+    .input-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 14px 14px 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: rgba(255,255,255,0.9);
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(30,136,229,0.25);
+    }
+
+    /* Button */
+    .btn {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 12px 35px rgba(32, 201, 151, 0.45);
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 45px rgba(30, 136, 229, 0.55);
+    }
+
+    /* Error */
+    .error-message {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      color: var(--error);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .form-footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .illustration {
+        padding: 2rem;
+        text-align: center;
+      }
+      .illustration {
+        padding: 1.5rem;
+      }
+      .login-form {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- LEFT -->
+    <div class="illustration">
+      <img src="{% static 'img/colgstackLogo.png' %}" alt="Colgstack Logo" />
+      <h1>Welcome</h1>
+      <p>Login to access your courses and academic dashboard.</p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="login-form">
+      <div class="form-header">
+        <h2>Student Login</h2>
+        <p>Enter your registered email and student ID</p>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" name="email" placeholder="Email address" required>
+        </div>
+
+        <div class="input-group">
+          <i class="fas fa-id-card"></i>
+          <input type="text" name="roll" placeholder="Student ID / Roll No" required>
+        </div>
+
+        <button type="submit" class="btn">Sign In</button>
+
+        {% if error %}
+        <div class="error-message">
+          <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+      </form>
+
+      <div class="form-footer">
+        Need help? <a href="#">Contact Support</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

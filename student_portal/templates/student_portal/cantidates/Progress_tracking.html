@@ -1,0 +1,250 @@
+{% extends "base1.html" %}
+{% block title %}Progress Tracking{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<style>
+:root{
+  --primary:#4f46e5;
+  --secondary:#6366f1;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:18px;
+  --shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.dashboard-wrap{
+  background:var(--bg);
+  padding:2.5rem 1rem;
+  min-height:100vh;
+}
+
+/* ===== HEADER ===== */
+.dashboard-header{
+  text-align:center;
+  margin-bottom:2.5rem;
+}
+.dashboard-header h1{
+  font-size:2.2rem;
+  font-weight:800;
+  color:var(--text);
+}
+.dashboard-header p{
+  color:var(--muted);
+  margin-top:.4rem;
+}
+
+/* ===== FILTER PANEL ===== */
+.filter-card{
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  box-shadow:var(--shadow);
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1rem;
+  margin-bottom:2.5rem;
+}
+
+.filter-card label{
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--muted);
+  margin-bottom:.3rem;
+}
+
+.filter-card select{
+  border-radius:12px;
+  padding:.55rem;
+  border:1px solid #e5e7eb;
+}
+
+/* ===== STATS ===== */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.5rem;
+  margin-bottom:2.5rem;
+}
+
+.stat-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:1.8rem;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  transition:.3s;
+}
+
+.stat-card:hover{transform:translateY(-6px)}
+
+.stat-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  height:6px;
+  background:var(--accent);
+}
+
+.stat-icon{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.3rem;
+  margin-bottom:1rem;
+}
+
+.stat-value{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--text);
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+/* ===== CHARTS ===== */
+.chart-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:1.5rem;
+}
+
+.chart-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  box-shadow:var(--shadow);
+}
+
+.chart-card h3{
+  font-size:1rem;
+  font-weight:700;
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:1rem;
+}
+</style>
+
+<div class="dashboard-wrap">
+
+  <!-- HEADER -->
+  <div class="dashboard-header">
+    <h1>📊 Student Progress Dashboard</h1>
+    <p>Track, analyze, and visualize student performance easily</p>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-card">
+    <div>
+      <label>Select Class</label>
+      <select class="form-control">
+        <option>All</option>
+        <option>10A</option>
+        <option>10B</option>
+      </select>
+    </div>
+    <div>
+      <label>Select Subject</label>
+      <select class="form-control">
+        <option>All</option>
+        <option>Math</option>
+        <option>Science</option>
+      </select>
+    </div>
+    <div>
+      <label>Select Term</label>
+      <select class="form-control">
+        <option>All</option>
+        <option>Term 1</option>
+        <option>Term 2</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card" style="--accent:linear-gradient(135deg,#4f46e5,#6366f1)">
+      <div class="stat-icon"><i class='bx bx-user'></i></div>
+      <div class="stat-value">156</div>
+      <div class="stat-label">Total Students</div>
+    </div>
+
+    <div class="stat-card" style="--accent:linear-gradient(135deg,#10b981,#34d399)">
+      <div class="stat-icon"><i class='bx bx-line-chart'></i></div>
+      <div class="stat-value">78.5%</div>
+      <div class="stat-label">Average Score</div>
+    </div>
+
+    <div class="stat-card" style="--accent:linear-gradient(135deg,#f59e0b,#fbbf24)">
+      <div class="stat-icon"><i class='bx bx-check-shield'></i></div>
+      <div class="stat-value">89%</div>
+      <div class="stat-label">Pass Rate</div>
+    </div>
+
+    <div class="stat-card" style="--accent:linear-gradient(135deg,#ef4444,#f87171)">
+      <div class="stat-icon"><i class='bx bx-award'></i></div>
+      <div class="stat-value">23</div>
+      <div class="stat-label">Top Performers</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>📈 Performance Trend</h3>
+      <canvas id="performanceTrendChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>📊 Subject Performance</h3>
+      <canvas id="subjectChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+const trendCtx=document.getElementById('performanceTrendChart');
+new Chart(trendCtx,{
+  type:'line',
+  data:{
+    labels:['Sep','Oct','Nov','Dec','Jan','Feb'],
+    datasets:[{
+      data:[70,75,78,76,80,84],
+      borderColor:'#4f46e5',
+      backgroundColor:'rgba(79,70,229,.25)',
+      fill:true,
+      tension:.4
+    }]
+  },
+  options:{plugins:{legend:{display:false}}}
+});
+
+const subjectCtx=document.getElementById('subjectChart');
+new Chart(subjectCtx,{
+  type:'bar',
+  data:{
+    labels:['Math','Science','English','History'],
+    datasets:[{
+      data:[82,76,84,73],
+      backgroundColor:['#4f46e5','#10b981','#f59e0b','#ef4444']
+    }]
+  },
+  options:{plugins:{legend:{display:false}}}
+});
+</script>
+{% endblock %}

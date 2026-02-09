@@ -1,0 +1,238 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}Progress Tracking{% endblock %}
+
+{% block extra_css %}
+<style>
+:root{
+  --primary:#4f46e5;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --info:#06b6d4;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:16px;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.main-content{
+  background:var(--bg);
+  padding:2rem 1rem;
+}
+
+.page-header{
+  margin-bottom:2rem;
+}
+
+.page-header h2{
+  font-size:1.8rem;
+  font-weight:800;
+  color:var(--text);
+}
+
+.page-header p{
+  color:var(--muted);
+}
+
+/* ===== STAT GRID ===== */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;
+}
+
+.stat-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:1.75rem;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:.3s ease;
+}
+
+.stat-card:hover{
+  transform:translateY(-6px);
+}
+
+.stat-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+}
+
+.stat-icon{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:1.2rem;
+}
+
+.primary .stat-icon{background:var(--primary);}
+.success .stat-icon{background:var(--success);}
+.warning .stat-icon{background:var(--warning);}
+.info .stat-icon{background:var(--info);}
+.danger .stat-icon{background:var(--danger);}
+.text-light .stat-icon{background:#64748b;}
+
+.stat-value{
+  font-size:2.1rem;
+  font-weight:800;
+  color:var(--text);
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:.95rem;
+}
+
+.trend{
+  font-size:.75rem;
+  font-weight:700;
+  padding:.25rem .7rem;
+  border-radius:999px;
+}
+
+.trend.up{
+  background:#ecfdf5;
+  color:#059669;
+}
+
+.trend.down{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+/* ===== CHART SECTION ===== */
+.chart-section{
+  margin-top:3rem;
+}
+
+.chart-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+}
+
+.chart-card h3{
+  text-align:center;
+  font-weight:700;
+  margin-bottom:1rem;
+  color:var(--text);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .stat-value{font-size:1.8rem;}
+  .page-header h2{font-size:1.5rem;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2><i class="fas fa-chart-line me-2"></i> Student Progress Dashboard</h2>
+    <p>Track improvement across interview, technical, and communication skills</p>
+  </div>
+
+  <!-- KPI CARDS -->
+  <section class="stats-grid">
+
+    <div class="stat-card primary">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+        <span class="trend {% if improvement.interview_prep > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.interview_prep|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.interview_prep }}</div>
+      <div class="stat-label">Interview Preparation</div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-microphone"></i></div>
+        <span class="trend {% if improvement.communication_skills > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.communication_skills|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.communication_skills }}</div>
+      <div class="stat-label">Communication Skills</div>
+    </div>
+
+    <div class="stat-card warning">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <span class="trend {% if improvement.resume_prep > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.resume_prep|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.resume_prep }}</div>
+      <div class="stat-label">Resume Preparation</div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-laptop-code"></i></div>
+        <span class="trend {% if improvement.technical_prep > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.technical_prep|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.technical_prep }}</div>
+      <div class="stat-label">Technical Preparation</div>
+    </div>
+
+    <div class="stat-card danger">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-pen"></i></div>
+        <span class="trend {% if improvement.mock_tests > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.mock_tests|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.mock_tests }}</div>
+      <div class="stat-label">Mock Tests</div>
+    </div>
+
+    <div class="stat-card text-light">
+      <div class="stat-header">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <span class="trend {% if improvement.mock_interviews > 0 %}up{% else %}down{% endif %}">
+          {{ improvement.mock_interviews|stringformat:"s"|cut:"-" }}
+        </span>
+      </div>
+      <div class="stat-value">{{ progress_report.mock_interviews }}</div>
+      <div class="stat-label">Mock Interviews</div>
+    </div>
+
+  </section>
+
+  {% if chart %}
+  <!-- CHARTS -->
+  <section class="chart-section grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="chart-card">
+      <h3>📈 Performance Trend</h3>
+      <canvas id="performanceTrendChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>📊 Subject Performance</h3>
+      <canvas id="subjectChart"></canvas>
+    </div>
+  </section>
+  {% endif %}
+
+</main>
+{% endblock %}

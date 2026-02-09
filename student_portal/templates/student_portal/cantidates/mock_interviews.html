@@ -1,0 +1,210 @@
+{% extends "base1.html" %}
+
+{% block title %}Mock Interviews{% endblock %}
+
+{% block content %}
+<style>
+:root{
+  --primary:#4f46e5;
+  --secondary:#6366f1;
+  --success:#10b981;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:18px;
+  --shadow:0 18px 40px rgba(0,0,0,.08);
+}
+
+.mock-wrap{
+  background:var(--bg);
+  padding:2.5rem 1.5rem;
+  min-height:100vh;
+}
+
+/* HERO */
+.mock-hero{
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  color:#fff;
+  border-radius:var(--radius);
+  padding:2.2rem;
+  box-shadow:var(--shadow);
+  margin-bottom:2.5rem;
+}
+
+.mock-hero h1{
+  font-size:2rem;
+  font-weight:800;
+}
+
+.mock-hero p{
+  opacity:.95;
+  margin-top:.5rem;
+}
+
+/* CARD */
+.mock-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:2rem;
+  box-shadow:var(--shadow);
+  margin-bottom:2rem;
+}
+
+/* SLOT */
+.slot-card{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:1.5rem;
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+}
+
+.slot-item{
+  display:flex;
+  align-items:center;
+  margin-bottom:.6rem;
+  color:var(--text);
+}
+
+.slot-item i{
+  color:var(--primary);
+  margin-right:.6rem;
+}
+
+.book-btn{
+  margin-top:1rem;
+  padding:.65rem 1.8rem;
+  border-radius:50px;
+  font-weight:600;
+}
+
+/* BENEFITS */
+.benefits{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.2rem;
+  margin-bottom:2rem;
+}
+
+.benefit{
+  background:#f9fafb;
+  border-radius:14px;
+  padding:1.2rem;
+  display:flex;
+  gap:.8rem;
+  align-items:flex-start;
+}
+
+.benefit i{
+  font-size:1.3rem;
+  color:var(--success);
+}
+
+/* QUESTIONS */
+.question-list li{
+  padding:.9rem;
+  border-radius:10px;
+  margin-bottom:.6rem;
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  transition:.2s;
+}
+
+.question-list li:hover{
+  background:#eef2ff;
+  transform:translateX(4px);
+}
+</style>
+
+<main class="mock-wrap">
+
+  <!-- HERO -->
+  <div class="mock-hero">
+    <h1><i class="fas fa-comments me-2"></i> Mock Interviews</h1>
+    <p>Practice real interviews with industry mentors and receive structured feedback to crack your next opportunity.</p>
+  </div>
+
+  <!-- NEXT SLOT -->
+  <div class="mock-card">
+    <h4 class="mb-3 text-primary">
+      <i class="fas fa-calendar-check me-2"></i> Next Available Slot
+    </h4>
+
+    <div class="slot-card">
+      <div class="slot-item">
+        <i class="fas fa-calendar-alt"></i>
+        <strong>Date:</strong>&nbsp; May 22, 2025
+      </div>
+      <div class="slot-item">
+        <i class="fas fa-clock"></i>
+        <strong>Time:</strong>&nbsp; 4:00 PM – 4:30 PM
+      </div>
+      <div class="slot-item">
+        <i class="fas fa-video"></i>
+        <strong>Mode:</strong>&nbsp; Google Meet
+        <span class="text-muted ms-1">(link shared after confirmation)</span>
+      </div>
+
+      <button class="btn btn-primary book-btn">
+        <i class="fas fa-check-circle me-1"></i> Book This Slot
+      </button>
+    </div>
+  </div>
+
+  <!-- BENEFITS -->
+  <div class="mock-card">
+    <h4 class="mb-3 text-primary">
+      <i class="fas fa-star me-2"></i> Why Attend Mock Interviews?
+    </h4>
+
+    <div class="benefits">
+      <div class="benefit">
+        <i class="fas fa-user-tie"></i>
+        <div>
+          <strong>Industry Mentors</strong>
+          <p class="text-muted mb-0">Interviews conducted by real professionals</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <i class="fas fa-comments"></i>
+        <div>
+          <strong>Real Questions</strong>
+          <p class="text-muted mb-0">Based on actual company interviews</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <i class="fas fa-chart-line"></i>
+        <div>
+          <strong>Performance Feedback</strong>
+          <p class="text-muted mb-0">Strengths, gaps & improvement tips</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <i class="fas fa-bolt"></i>
+        <div>
+          <strong>Confidence Boost</strong>
+          <p class="text-muted mb-0">Reduce interview anxiety</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="mock-card">
+    <h4 class="mb-3 text-primary">
+      <i class="fas fa-question-circle me-2"></i> Sample Interview Questions
+    </h4>
+
+    <ul class="list-unstyled question-list">
+      <li>What is the difference between supervised and unsupervised learning?</li>
+      <li>Walk me through a recent data analytics project you’ve completed.</li>
+      <li>How do you handle missing data in a dataset?</li>
+      <li>Explain a SQL JOIN with a real-world example.</li>
+    </ul>
+  </div>
+
+</main>
+{% endblock %}

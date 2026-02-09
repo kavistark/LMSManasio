@@ -1,0 +1,235 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Assign Course{% endblock %}
+
+{% block container %}
+
+<style>
+:root {
+  --primary: #2563eb;
+  --secondary: #64748b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* WRAPPER */
+.assign-course-wrapper {
+  background: linear-gradient(135deg, #e0f2fe, #ecfeff);
+  padding: 28px;
+  border-radius: 24px;
+}
+
+/* HEADER */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* CARD */
+.course-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.course-card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.course-card-header h2 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.course-card-body {
+  padding: 22px;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+/* ASSIGNMENT LIST */
+.assigned-list {
+  margin-top: 36px;
+}
+
+.assigned-list h3 {
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* ASSIGNMENT ITEM */
+.assignment-item {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.assignment-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.assignment-student {
+  font-weight: 600;
+}
+
+.assignment-date {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* COURSE BADGE */
+.course-badge {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* EMPTY */
+.empty-text {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .assignment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+</style>
+
+<div class="container my-4">
+  <div class="assign-course-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>🎓 Assign Course</h1>
+      <div class="breadcrumb">
+        Home <span class="mx-1">›</span> Assign Course
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="course-card">
+      <div class="course-card-header">
+        <h2>Course Assignment</h2>
+      </div>
+
+      <div class="course-card-body">
+        <form method="post" action="{% url 'assign_course' %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>Student</label>
+            <select name="student_id" class="form-control" required>
+              <option value="">Select student</option>
+              {% for student in students %}
+                <option value="{{ student.id }}">{{ student.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Course</label>
+            <select name="course_id" class="form-control" required>
+              <option value="">Select course</option>
+              {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.code }} – {{ course.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-link me-1"></i> Assign Course
+          </button>
+        </form>
+
+        <!-- ASSIGNED COURSES -->
+        <div class="assigned-list">
+          <h3>📚 Assigned Courses</h3>
+
+          {% for assignment in assignments %}
+          <div class="assignment-item">
+            <div class="assignment-left">
+              <span class="assignment-student">{{ assignment.student.name }}</span>
+              <span class="assignment-date">
+                Assigned on {{ assignment.date_assigned|date:"d M Y" }}
+              </span>
+            </div>
+
+            <span class="course-badge">
+              {{ assignment.course.code }}
+            </span>
+          </div>
+          {% empty %}
+          <div class="empty-text">No course assignments yet.</div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

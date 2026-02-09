@@ -1,0 +1,298 @@
+{% extends "base1.html" %}
+{% block title %}Q&A Forum{% endblock %}
+
+{% block content %}
+
+<style>
+:root{
+  --primary:#4f46e5;
+  --trainer:#6366f1;
+  --student:#10b981;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:18px;
+  --shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+/* Layout */
+.qa-wrapper{
+  background:var(--bg);
+  padding:2rem 1.2rem;
+  min-height:100vh;
+}
+
+.qa-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+/* Header */
+.qa-header{
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  color:#fff;
+  padding:1.5rem 2rem;
+}
+
+.qa-header h2{
+  font-weight:800;
+  margin:0;
+}
+
+.qa-header p{
+  opacity:.9;
+  margin-top:.25rem;
+}
+
+/* Chat Area */
+.chat-area{
+  padding:1.5rem;
+  max-height:520px;
+  overflow-y:auto;
+}
+
+/* Message Bubble */
+.msg{
+  max-width:75%;
+  margin-bottom:1.2rem;
+  padding:1rem 1.2rem;
+  border-radius:16px;
+  position:relative;
+  animation:fadeUp .25s ease;
+}
+
+.trainer-msg{
+  background:#eef2ff;
+  border-left:5px solid var(--trainer);
+}
+
+.student-msg{
+  background:#ecfdf5;
+  border-right:5px solid var(--student);
+  margin-left:auto;
+}
+
+/* Header inside bubble */
+.msg-header{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  margin-bottom:.4rem;
+}
+
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.8rem;
+  font-weight:700;
+  color:#fff;
+}
+
+.trainer-avatar{ background:var(--trainer); }
+.student-avatar{ background:var(--student); }
+
+.msg-name{
+  font-weight:600;
+  font-size:.85rem;
+}
+
+.msg-time{
+  font-size:.7rem;
+  color:var(--muted);
+}
+
+/* Content */
+.msg-content{
+  font-size:.95rem;
+  color:var(--text);
+}
+
+.msg-content code{
+  background:#111827;
+  color:#e5e7eb;
+  padding:.6rem;
+  border-radius:8px;
+  display:block;
+  font-size:.8rem;
+  margin-top:.5rem;
+}
+
+/* Typing */
+.typing{
+  font-size:.8rem;
+  color:var(--muted);
+  margin:1rem;
+}
+
+/* Input */
+.input-area{
+  border-top:1px solid #e5e7eb;
+  padding:1rem;
+  background:#fff;
+}
+
+.message-box{
+  border-radius:14px;
+  resize:none;
+}
+
+.send-btn{
+  border-radius:50px;
+  padding:.45rem 1.4rem;
+  font-weight:600;
+}
+
+/* Animation */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+
+<main class="qa-wrapper">
+  <div class="qa-card">
+
+    <!-- HEADER -->
+    <div class="qa-header">
+      <h2><i class="fas fa-comments me-2"></i> Q&A Discussion Forum</h2>
+      <p>Ask questions • Share knowledge • Learn together</p>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-area" id="chatMessages">
+
+      <!-- Trainer -->
+      <div class="msg trainer-msg">
+        <div class="msg-header">
+          <div class="avatar trainer-avatar">DJ</div>
+          <div>
+            <div class="msg-name">Dr. Sarah Johnson</div>
+            <div class="msg-time">2:30 PM</div>
+          </div>
+        </div>
+        <div class="msg-content">
+          Good afternoon everyone! Today we’re diving into <strong>SQL JOINs</strong>.  
+          Can anyone explain what a JOIN is and why it’s important?
+        </div>
+      </div>
+
+      <!-- Student -->
+      <div class="msg student-msg">
+        <div class="msg-header">
+          <div class="avatar student-avatar">AK</div>
+          <div>
+            <div class="msg-name">Amit Kumar</div>
+            <div class="msg-time">2:32 PM</div>
+          </div>
+        </div>
+        <div class="msg-content">
+          A JOIN combines rows from multiple tables using a related column.  
+          It helps retrieve normalized relational data efficiently.
+        </div>
+      </div>
+
+      <!-- Trainer -->
+      <div class="msg trainer-msg">
+        <div class="msg-header">
+          <div class="avatar trainer-avatar">DJ</div>
+          <div>
+            <div class="msg-name">Dr. Sarah Johnson</div>
+            <div class="msg-time">2:33 PM</div>
+          </div>
+        </div>
+        <div class="msg-content">
+          Excellent 👍 Can you share an example of an <strong>INNER JOIN</strong>?
+        </div>
+      </div>
+
+      <!-- Student with code -->
+      <div class="msg student-msg">
+        <div class="msg-header">
+          <div class="avatar student-avatar">AK</div>
+          <div>
+            <div class="msg-name">Amit Kumar</div>
+            <div class="msg-time">2:35 PM</div>
+          </div>
+        </div>
+        <div class="msg-content">
+          Here’s a simple example:
+          <code>
+SELECT s.name, c.course_name  
+FROM students s  
+INNER JOIN enrollments e ON s.id = e.student_id  
+INNER JOIN courses c ON e.course_id = c.id;
+          </code>
+        </div>
+      </div>
+
+      <!-- Typing -->
+      <div class="typing" id="typingIndicator" style="display:none;">
+        <i class="fas fa-ellipsis-h"></i> Trainer is typing…
+      </div>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <form onsubmit="sendMessage(event)">
+        <textarea
+          id="messageInput"
+          class="form-control message-box"
+          rows="2"
+          placeholder="Ask a question or share your answer..."
+          onkeydown="handleKeyPress(event)"
+        ></textarea>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <small class="text-muted">
+            <i class="fas fa-keyboard me-1"></i> Ctrl + Enter to send
+          </small>
+          <button class="btn btn-primary send-btn">
+            <i class="fas fa-paper-plane me-1"></i> Send
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<script>
+function handleKeyPress(e){
+  if(e.ctrlKey && e.key==="Enter"){
+    e.preventDefault();
+    sendMessage(e);
+  }
+}
+
+function sendMessage(e){
+  e.preventDefault();
+  const input=document.getElementById("messageInput");
+  const text=input.value.trim();
+  if(!text) return;
+
+  const chat=document.getElementById("chatMessages");
+  chat.innerHTML+=`
+    <div class="msg student-msg">
+      <div class="msg-header">
+        <div class="avatar student-avatar">YU</div>
+        <div>
+          <div class="msg-name">You</div>
+          <div class="msg-time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
+        </div>
+      </div>
+      <div class="msg-content">${text}</div>
+    </div>`;
+  input.value="";
+  chat.scrollTop=chat.scrollHeight;
+}
+</script>
+
+{% endblock %}

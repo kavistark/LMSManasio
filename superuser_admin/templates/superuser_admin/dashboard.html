@@ -1,0 +1,26 @@
+{% extends 'superuser_admin/base.html' %}
+{% block content %}
+
+<div class="glass" style="padding:30px;">
+  <h2>📊 Superuser Dashboard</h2>
+  <p>You control system-level admin access.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px;">
+    <div class="glass" style="padding:20px;">
+      <h3>➕ Add Admin</h3>
+      <a href="{% url 'add_admin' %}" class="btn-primary">Create</a>
+    </div>
+
+    <div class="glass" style="padding:20px;">
+      <h3>📋 Manage Admins</h3>
+      <a href="{% url 'admin_manage' %}" class="btn-primary">View</a>
+    </div>
+
+    <div class="glass" style="padding:20px;">
+      <h3>🚪 Logout</h3>
+      <a href="{% url 'superuser_logout' %}" class="btn-primary">Logout</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,367 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Schedule Event{% endblock %}
+
+{% block extra_css %}
+  
+    <!-- FullCalendar Styles  -->
+
+    <style>
+      #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      
+      .popup-container{
+        position: fixed; /* Keeps it pinned to the viewport */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000; /* Makes sure it appears above other elements */
+      }
+
+      .event-input {
+        border: 2px solid #0288D1;
+        outline: none;
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 20px;
+        background: #E3F2FD;
+        /* width: auto; */
+        /* flex-grow: 1; */
+      }
+    </style>
+        
+{% endblock %}
+
+{% block container %}
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+
+  <form id="myForm" method="post">
+    {% csrf_token %}
+    
+    <div id="calendar"></div>
+    <input type="hidden" id="event-id" name="event-id">
+    <input type="hidden" id="title" name="title">
+    <input type="hidden" id="course" name="course">
+    <input type="hidden" id="description" name="description">
+    <input type="hidden" id="meeting-link" name="meeting-link">
+    <input type="hidden" id="start" name="start">
+    <input type="hidden" id="end" name="end">
+    <input type="hidden" id="allDay" name="allDay">
+    <input type="hidden" id="edit" name="edit">
+    <input type="hidden" id="delete" name="delete">
+
+
+    <!-- Add Event Form -->
+    <div id="add-event-form" class="popup-container" style="display: none;">
+      <div class="d-flex justify-content-center">
+        <div class="card w-50 shadow">
+          <form>
+            <div class="card-body px-4">
+              
+              <!-- Header -->
+              <div class="container mb-3">
+                <div class="d-flex justify-content-between align-items-center text-center">
+                  <h2 class="card-title col-11 m-0">Event Details</h2>
+                  <button type="button" class="btn-close col-1" aria-label="Close"
+                  onclick="document.getElementById('add-event-form').style.display='none'"
+                  ></button>
+                </div>
+              </div>
+
+              <hr>
+
+              <!-- Event Title -->
+              <div class="mb-3">
+                <label for="event-title" class="form-label">Event Title</label>
+                <input type="text" 
+                      id="event-title" 
+                      class="form-control event-input" 
+                      name="event-title" 
+                      aria-label="Event title input" 
+                      placeholder="Enter event title"
+                      required>
+              </div>
+
+              <!-- Event Course -->
+              <div class="mb-3">
+                <label for="event-course" class="form-label">Course</label>
+                <select id="event-course" class="form-control event-input" name="event-course" 
+                aria-label="Select course for the event" >
+                  <option value="">-- All Course --</option>
+                  {% for course in courses %}
+                    <option value="{{ course.code }}">{{ course.code }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Event Description -->
+              <div class="mb-3">
+                <label for="event-description" class="form-label">Event Description</label>
+                <textarea id="event-description" 
+                          class="form-control event-input" 
+                          name="event-description" 
+                          aria-label="Event description input" 
+                          rows="3"
+                          placeholder="Enter event details"></textarea>
+              </div>
+
+              <!-- Meeting Link -->
+              <div class="mb-3">
+                <label for="event-meeting-link" class="form-label">Meeting Link</label>
+                <input type="url" 
+                      id="event-meeting-link" 
+                      class="form-control event-input" 
+                      name="event-meeting-link" 
+                      aria-label="Meeting link input" 
+                      placeholder="https://meet.google.com/..."
+                      required>
+              </div>
+
+              <!-- Error Message -->
+              <p class="h6 text-danger mb-3">{{error_message}}</p>
+
+              <!-- Submit Button -->
+              <button class="btn btn-primary w-100" id="add-event">Enter</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  
+
+    <!-- Show an Event -->
+     <div id="event-details" class="popup-container" style="display: none;">
+      <div class="d-flex justify-content-center">
+        <div class="card w-50 shadow">
+          <form>
+            <div class="card-body px-4">
+              
+              <!-- Header -->
+              <div class="container mb-3">
+                <div class="d-flex justify-content-between align-items-center text-center">
+                  <h2 class="card-title col-11 m-0">Event Details</h2>
+                  <button type="button" class="btn-close col-1" aria-label="Close"
+                  onclick="document.getElementById('event-details').style.display='none'"
+                  ></button>
+                </div>
+              </div>
+
+              <hr>
+
+              <!-- Event Title -->
+              <div class="mb-3">
+                <label for="event-title" class="form-label">Event Title</label>
+                <input type="text" 
+                      id="event-details-title" 
+                      class="form-control event-input" 
+                      aria-label="Event title input" 
+                      placeholder="Enter event title">
+              </div>
+
+              <!-- Event Couorse -->
+              <div class="mb-3">
+                <label for="event-course" class="form-label">Course</label>
+                <select id="event-details-course" class="form-control event-input" name="event-course" 
+                aria-label="Select course for the event" >
+                  <option value="">-- All Course --</option>
+                  {% for course in courses %}
+                    <option value="{{ course.code }}">{{ course.code }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Event Description -->
+              <div class="mb-3">
+                <label for="event-description" class="form-label">Event Description</label>
+                <textarea id="event-details-description" 
+                          class="form-control event-input" 
+                          aria-label="Event description input" 
+                          rows="3"
+                          placeholder="Enter event details"></textarea>
+              </div>
+
+              <!-- Meeting Link -->
+              <div class="mb-3">
+                <label for="event-meeting-link" class="form-label">Meeting Link</label>
+                <div class="d-flex align-items-center">
+                  <input type="url" 
+                        id="event-details-meeting-link" 
+                        class="form-control event-input" 
+                        aria-label="Meeting link input" 
+                        placeholder="https://meet.google.com/...">
+                  <a href="#" id="event-details-meeting-link-join" class="btn btn-primary ms-2"
+                   target="_blank">Join</a>
+                </div>
+              </div>
+
+              <!-- Error Message -->
+              <p class="h6 text-danger mb-3">{{error_message}}</p>
+
+              <!-- Submit Button -->
+              <button class="btn btn-primary w-40" id="edit-event">Edit</button>
+              <button class="btn btn-primary w-40" id="delete-event">Delete</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var myCalendar = document.getElementById('calendar');
+
+      // Initialize FullCalendar      
+      // FullCalendar.Calendar → a class constructor provided by the FullCalendar library.
+      // new FullCalendar.Calendar(element, options) → creates a new calendar instance and attaches it to a DOM element (myCalendar here).
+      // The first argument is the DOM element where the calendar will render.
+      // The second argument is an object with configuration options (initialView, headerToolbar, events, etc.).
+      
+      var calendar = new FullCalendar.Calendar(myCalendar, {
+          initialView: 'dayGridMonth',
+          // 'dayGridMonth' is the classic month grid. 
+          // Other common views: 'timeGridWeek', 'timeGridDay' for time-based schedules; 'listWeek', 'listMonth' for agenda lists.
+
+          selectable: true,
+
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          // Configures the top toolbar:
+          // left: navigation buttons (prev, next, today)
+          // center: the current view’s title (e.g. “August 2025”)
+          // right: view switchers (month ↔ week ↔ day)
+
+          events: {{ events|safe }},  // Adds events to the calendar
+
+          eventDidMount: function(info) {
+            // Add custom fields to events (not part of the core set like title, start, end).
+            // Tooltip with description + googleMeetLink link
+
+            let tooltip = `${info.event.extendedProps.description || ''}`;
+            // info.event is the event object
+            // extendedProps holds custom fields you added to events
+
+            if (info.event.extendedProps.meetingLink) {
+              tooltip += `\nMeeting Link: ${info.event.extendedProps.meetingLink}`;
+            }
+
+            if (info.event.extendedProps.course) {
+              tooltip += `\nCourse: ${info.event.extendedProps.course}`;
+            }
+
+            if (info.event.extendedProps.eventId) {
+              tooltip += `\nEvent ID: ${info.event.extendedProps.eventId}`;
+            }
+
+            info.el.setAttribute("title", tooltip);
+            // info.el is the rendered HTML element for that event
+          },
+
+          eventClick: function(info) {
+            // When an event is clicked
+
+            document.getElementById('event-details').style.display = 'block';
+            document.getElementById('event-details-title').value = info.event.title;
+            document.getElementById('event-details-course').value = info.event.extendedProps.course || '';
+            document.getElementById('event-details-description').value = info.event.extendedProps.description || '';
+            document.getElementById('event-details-meeting-link').value = info.event.extendedProps.meetingLink || '';
+            document.getElementById('event-details-meeting-link-join').href = document.getElementById('event-details-meeting-link').value.trim() || "#";
+
+            // Add event listeners for edit button
+            document.getElementById("edit-event").addEventListener('click', function (e) {
+              e.preventDefault();
+              // e.preventDefault() stops the default behavior of an event from happening.
+              // Think of it as telling the browser: “Hey, don’t do what you normally would — 
+              // I’ll handle this my way.”
+
+              if (confirm(`Are you sure you want to edit this event - "${info.event.title}"?`)) {
+                document.getElementById('event-id').value = info.event.extendedProps.eventId || '';
+                document.getElementById('title').value = document.getElementById('event-details-title').value;
+                document.getElementById('course').value = document.getElementById('event-details-course').value;
+                document.getElementById('description').value = document.getElementById('event-details-description').value;
+                document.getElementById('meeting-link').value = document.getElementById('event-details-meeting-link').value;
+                document.getElementById('start').value = info.event.startStr;
+                document.getElementById('end').value = info.event.endStr;
+                document.getElementById('allDay').value = info.event.allDay;
+                document.getElementById('delete').value = false;
+                document.getElementById('edit').value = true;
+                document.getElementById("myForm").submit(); // submit a form using JavaScript
+              }
+            });
+
+            // Add event listeners for delete button
+            document.getElementById("delete-event").addEventListener('click', function (e) {
+              e.preventDefault();
+              if (confirm(`Are you sure you want to delete event "${info.event.title}"?`)) {
+                  document.getElementById('event-id').value = info.event.extendedProps.eventId || '';
+                  document.getElementById('title').value = info.event.title;
+                  document.getElementById('course').value = info.event.extendedProps.course || '';
+                  document.getElementById('description').value = info.event.extendedProps.description || '';
+                  document.getElementById('meeting-link').value = info.event.extendedProps.meetingLink || '';
+                  document.getElementById('start').value = info.event.startStr;
+                  document.getElementById('end').value = info.event.endStr;
+                  document.getElementById('allDay').value = info.event.allDay; 
+                  document.getElementById('delete').value = true; 
+                  document.getElementById('edit').value = false;
+                  document.getElementById("myForm").submit(); // submit a form using JavaScript
+              }
+            });
+
+          },
+
+          select: function(info) {
+            // When a date range is selected
+            document.getElementById("add-event-form").style.display = "block";
+            
+            document.getElementById("add-event").addEventListener('click', function () {
+              var title = document.querySelector('.event-input[name="event-title"]').value;
+              if (title) {
+                calendar.addEvent({
+                  title: title,
+                  course: document.querySelector('.event-input[name="event-course"]').value,
+                  description: document.querySelector('.event-input[name="event-description"]').value,
+                  meetingLink: document.querySelector('.event-input[name="event-meeting-link"]').value,
+                  start: info.startStr,
+                  end: info.endStr,
+                  allDay: info.allDay
+                });
+              
+                document.getElementById('title').value = title;
+                document.getElementById('course').value = document.getElementById('event-course').value;
+                document.getElementById('description').value = document.getElementById('event-description').value;
+                document.getElementById('meeting-link').value = document.getElementById('event-meeting-link').value;
+                document.getElementById('start').value = info.startStr;
+                document.getElementById('end').value = info.endStr;
+                document.getElementById('allDay').value = info.allDay; 
+                document.getElementById('delete').value = false; 
+                document.getElementById('edit').value = false;
+                document.getElementById("myForm").submit(); // submit a form using JavaScript
+              }
+            })
+          }
+      });
+
+      calendar.render();
+
+    });
+    
+  </script>
+
+
+{% endblock container %}

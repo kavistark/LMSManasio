@@ -1,0 +1,221 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Progress Tracking{% endblock %}
+
+{% block container %}
+
+<style>
+/* ===== PAGE WRAPPER ===== */
+.progress-wrapper {
+  background: linear-gradient(135deg, #ecfeff, #e0f2fe);
+  padding: 30px;
+  border-radius: 24px;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ===== CARD ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  overflow: hidden;
+}
+
+/* ===== CARD HEADER ===== */
+.glass-card-header {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 18px 24px;
+}
+
+.glass-card-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+/* ===== FORM BODY ===== */
+.glass-card-body {
+  padding: 28px;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+/* ===== GRID ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ===== METRIC CARD ===== */
+.metric-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.metric-card label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.submit-btn {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 12px 26px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* ===== ALERT ===== */
+.alert {
+  border-radius: 14px;
+  font-size: 0.9rem;
+}
+</style>
+
+<div class="container my-4">
+  <div class="progress-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>Progress Tracking</h1>
+      <div class="breadcrumb">
+        Home <span class="mx-1">›</span> Students <span class="mx-1">›</span> Progress
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="glass-card">
+
+      <!-- CARD HEADER -->
+      <div class="glass-card-header">
+        <h2>📊 Add Student Progress Report</h2>
+      </div>
+
+      <!-- CARD BODY -->
+      <div class="glass-card-body">
+
+        <form method="post" action="{% url 'progress_tracking' %}">
+          {% csrf_token %}
+
+          <!-- STUDENT SELECT -->
+          <div class="form-group mb-4">
+            <label>Select Student (Roll No)</label>
+            <select name="roll-no" class="form-select" required>
+              <option value="" disabled selected>Select student</option>
+              {% for student in students %}
+                <option value="{{ student.roll }}">
+                  {{ student.roll }} – {{ student.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- METRICS -->
+          <div class="form-grid">
+
+            <div class="metric-card">
+              <label><i class="fas fa-user-tie text-primary"></i> Interview Preparation</label>
+              <input type="number" name="interview-prep" class="form-control" required>
+            </div>
+
+            <div class="metric-card">
+              <label><i class="fas fa-comments text-success"></i> Communication Skills</label>
+              <input type="number" name="communication-skills" class="form-control" required>
+            </div>
+
+            <div class="metric-card">
+              <label><i class="fas fa-file-alt text-info"></i> Resume Preparation</label>
+              <input type="number" name="resume-prep" class="form-control" required>
+            </div>
+
+            <div class="metric-card">
+              <label><i class="fas fa-code text-warning"></i> Technical Preparation</label>
+              <input type="number" name="technical-prep" class="form-control" required>
+            </div>
+
+            <div class="metric-card">
+              <label><i class="fas fa-clipboard-check text-primary"></i> Mock Tests</label>
+              <input type="number" name="mock-tests" class="form-control" required>
+            </div>
+
+            <div class="metric-card">
+              <label><i class="fas fa-microphone text-danger"></i> Mock Interviews</label>
+              <input type="number" name="mock-interviews" class="form-control" required>
+            </div>
+
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="text-end mt-4">
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-check-circle me-1"></i> Submit Progress
+            </button>
+          </div>
+        </form>
+
+        {% if success %}
+          <div class="alert alert-success alert-dismissible fade show mt-4">
+            {{ success }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endif %}
+
+        {% if error %}
+          <div class="alert alert-danger alert-dismissible fade show mt-4">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock container %}

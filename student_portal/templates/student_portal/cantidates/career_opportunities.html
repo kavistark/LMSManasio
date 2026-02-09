@@ -1,0 +1,194 @@
+{% extends "base1.html" %}
+{% load static %}
+
+{% block title %}Career Opportunities{% endblock %}
+
+{% block extra_css %}
+<style>
+:root{
+  --primary:#4f46e5;
+  --success:#10b981;
+  --danger:#ef4444;
+  --muted:#64748b;
+  --border:#e5e7eb;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --radius:14px;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.main-content{
+  background:var(--bg);
+  padding:2rem 1rem;
+}
+
+/* ===== JOB CARD ===== */
+.job-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  height:100%;
+  transition:.3s ease;
+  box-shadow:var(--shadow);
+}
+
+.job-card:hover{
+  transform:translateY(-6px);
+}
+
+.job-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:1rem;
+}
+
+.job-icon{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),#6366f1);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:1.1rem;
+  flex-shrink:0;
+}
+
+.job-title{
+  font-size:1.1rem;
+  font-weight:700;
+  color:#0f172a;
+}
+
+.job-company{
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.job-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  font-size:.85rem;
+  color:var(--muted);
+  margin:.75rem 0;
+}
+
+.job-meta i{
+  margin-right:4px;
+}
+
+.job-desc{
+  color:#475569;
+  font-size:.9rem;
+  margin-bottom:1rem;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.job-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+.apply-btn{
+  border:1px solid var(--primary);
+  color:var(--primary);
+  padding:.35rem .9rem;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:600;
+  transition:.3s;
+}
+
+.apply-btn:hover{
+  background:var(--primary);
+  color:#fff;
+}
+
+/* ===== GRID ===== */
+.job-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:576px){
+  .job-meta{gap:.5rem}
+  .job-title{font-size:1rem}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content fade-in">
+
+  <div class="container-fluid px-0">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+      <h2 class="fw-bold text-primary">
+        <i class="fas fa-briefcase me-2"></i> Career Opportunities
+      </h2>
+      <p class="text-muted mb-0">
+        Explore internships & full-time roles curated for you
+      </p>
+    </div>
+
+    <!-- JOB LIST -->
+    <div class="job-grid">
+
+      {% for job in jobs %}
+      <a href="{% url 'job_post' job_id=job.id %}" class="text-decoration-none text-reset">
+
+        <div class="job-card">
+
+          <div class="job-header">
+            <div>
+              <div class="job-title">{{ job.job_title }}</div>
+              <div class="job-company">
+                <i class="fas fa-building me-1"></i>{{ job.company_name }}
+              </div>
+            </div>
+
+            <div class="job-icon">
+              {{ job.company_name|first|upper }}
+            </div>
+          </div>
+
+          <div class="job-meta">
+            <span><i class="fas fa-briefcase text-primary"></i>{{ job.experience }} Yrs</span>
+            <span><i class="fas fa-map-marker-alt text-danger"></i>{{ job.location }}</span>
+            <span><i class="fas fa-money-bill-wave text-success"></i>{{ job.stipend }}</span>
+          </div>
+
+          <div class="job-desc">
+            {{ job.job_description|safe }}
+          </div>
+
+          <div class="job-footer">
+            <span>{{ job.updated_at|date:"M d, Y" }}</span>
+            <span class="apply-btn">
+              Apply →
+            </span>
+          </div>
+
+        </div>
+      </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</main>
+{% endblock %}

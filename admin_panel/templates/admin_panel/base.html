@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{% block title %}Admin Panel{% endblock %} | DemoLMS</title>
+
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1e40af;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --sidebar:#ffffff;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+/* Reset */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* TOPBAR */
+.topbar{
+  height:70px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1.75rem;
+  position:fixed;
+  inset:0 0 auto 0;
+  z-index:1000;
+  box-shadow:var(--shadow);
+}
+.topbar .brand{
+  font-size:1.5rem;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.user-chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.15);
+  font-weight:600;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:70px;
+  left:0;
+  width:270px;
+  height:calc(100vh - 70px);
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  padding:1.2rem .8rem;
+  overflow-y:auto;
+}
+.sidebar h6{
+  font-size:.7rem;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding:0 .8rem;
+  margin:1rem 0 .5rem;
+}
+.sidebar ul{list-style:none}
+.sidebar li{margin-bottom:6px}
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:.75rem .9rem;
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--muted);
+  font-weight:500;
+  transition:.25s;
+}
+.sidebar a i{width:20px;text-align:center}
+.sidebar a:hover,
+.sidebar a.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;
+  box-shadow:var(--shadow);
+}
+
+/* MAIN CONTENT */
+.main-content{
+  margin-left:270px;
+  margin-top:70px;
+  padding:2rem;
+}
+
+/* CARDS */
+.card-ui{
+  background:var(--card);
+  border-radius:16px;
+  padding:1.8rem;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  animation:fadeUp .5s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+
+/* RESPONSIVE */
+@media(max-width:992px){
+  .sidebar{width:220px}
+  .main-content{margin-left:220px}
+}
+@media(max-width:768px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+    top:0;
+  }
+  .main-content{
+    margin:0;
+    padding:1.25rem;
+  }
+}
+</style>
+
+{% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">{{ admin_name }}</div>
+  <div class="topbar-right">
+    <div class="user-chip">
+      <i class="fas fa-user-circle"></i>
+      Admin
+    </div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <h6>Dashboard</h6>
+  <ul>
+    <li><a href="{% url 'admin_dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="fas fa-chart-line"></i> Dashboard</a></li>
+  </ul>
+
+  <h6>Students</h6>
+  <ul>
+    <li><a href="{% url 'add_college' %}" class="{% if request.resolver_match.url_name == 'add_college' %}active{% endif %}">
+      <i class="fas fa-university"></i> Add College</a></li>
+    <li><a href="{% url 'add_student' %}" class="{% if request.resolver_match.url_name == 'add_student' %}active{% endif %}">
+      <i class="fas fa-user-plus"></i> Add Student</a></li>
+    <li><a href="{% url 'manage_students' %}" class="{% if request.resolver_match.url_name == 'manage_students' %}active{% endif %}">
+      <i class="fas fa-users"></i> Manage Students</a></li>
+    <li><a href="{% url 'progress_tracking_view' %}" class="{% if request.resolver_match.url_name == 'progress_tracking_view' %}active{% endif %}">
+      <i class="fas fa-chart-line"></i> Progress Tracking</a></li>
+  </ul>
+
+  <h6>Courses</h6>
+  <ul>
+    <li><a href="{% url 'add_course' %}" class="{% if request.resolver_match.url_name == 'add_course' %}active{% endif %}">
+      <i class="fas fa-book"></i> Add Course</a></li>
+    <li><a href="{% url 'manage_courses' %}" class="{% if request.resolver_match.url_name == 'manage_courses' %}active{% endif %}">
+      <i class="fas fa-book-open"></i> Manage Courses</a></li>
+    <li><a href="{% url 'assign_course' %}" class="{% if request.resolver_match.url_name == 'assign_course' %}active{% endif %}">
+      <i class="fas fa-chalkboard-teacher"></i> Assign Course</a></li>
+  </ul>
+
+  <h6>Activities</h6>
+  <ul>
+    <li><a href="{% url 'assign_task' %}" class="{% if request.resolver_match.url_name == 'assign_task' %}active{% endif %}">
+      <i class="fas fa-tasks"></i> Assign Task</a></li>
+    <li><a href="{% url 'live_class' %}" class="{% if request.resolver_match.url_name == 'live_class' %}active{% endif %}">
+      <i class="fas fa-video"></i> Live Class</a></li>
+    <li><a href="{% url 'schedule_event' %}" class="{% if request.resolver_match.url_name == 'schedule_event' %}active{% endif %}">
+      <i class="fas fa-calendar"></i> Calendar</a></li>
+    <li><a href="{% url 'career_opportunities' %}" class="{% if request.resolver_match.url_name == 'career_opportunities' %}active{% endif %}">
+      <i class="fas fa-briefcase"></i> Career</a></li>
+    <li><a href="{% url 'upload_study_image' %}" class="{% if request.path == '/admin_dashboard/upload-image/' %}active{% endif %}">
+      <i class="fas fa-image"></i> Posters</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  {% block container %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

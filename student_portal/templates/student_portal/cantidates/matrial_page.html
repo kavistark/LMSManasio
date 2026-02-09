@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Study Materials{% endblock %}
+
+{% block extra_css %}
+<style>
+  .materials-layout {
+    display: flex;
+    height: calc(100vh - 110px);
+    gap: 1.5rem;
+  }
+
+  .materials-preview {
+    flex: 1;
+    background: rgba(255,255,255,0.97);
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .preview-header {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    font-weight: 600;
+  }
+
+  .preview-body {
+    position: relative;
+    flex: 1;
+  }
+
+  .materials-sidebar {
+    width: 320px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .folder-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  .folder-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .material-item {
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .material-item:hover {
+    background: #e0e7ff;
+  }
+
+  iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Fallback */
+  .video-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #f8fafc;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .video-fallback i {
+    font-size: 40px;
+    color: #ef4444;
+    margin-bottom: 1rem;
+  }
+
+  .video-fallback a {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 992px) {
+    .materials-layout {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .materials-sidebar {
+      width: 100%;
+    }
+  }
+  
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if course %}
+<div class="materials-layout">
+
+  <!-- PREVIEW -->
+  <div class="materials-preview">
+    <div class="preview-header">📺 Live Preview</div>
+
+    <div class="preview-body">
+      <iframe id="previewFrame" allowfullscreen></iframe>
+
+      <!-- FALLBACK -->
+      <div class="video-fallback" id="videoFallback">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h6>Video cannot be embedded</h6>
+        <p class="text-muted">This video must be watched on YouTube</p>
+        <a id="youtubeLink" target="_blank" class="btn btn-primary">
+          ▶ Watch on YouTube
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="materials-sidebar">
+    <h5>{{ course.name }}</h5>
+
+    <div class="btn-group w-100 mb-3">
+      <a href="?course_id={{ course.id }}&view=video"
+         class="btn {% if request.GET.view == 'video' or not request.GET.view %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        🎥 Videos
+      </a>
+      <a href="?course_id={{ course.id }}&view=material"
+         class="btn {% if request.GET.view == 'material' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        📄 Materials
+      </a>
+    </div>
+
+    {% for folder in course.folders.all %}
+      {% if folder.type == request.GET.view or not request.GET.view %}
+      <div class="folder-card">
+        <div class="folder-title">📁 {{ folder.name }}</div>
+
+        {% for mat in folder.coursematerial_set.all %}
+          <div class="material-item js-preview"
+               data-link="{{ mat.link|escape }}">
+            ▶ {{ mat.title }}
+          </div>
+        {% empty %}
+          <small class="text-muted">No content</small>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+{% endif %}
+<script>
+const iframe = document.getElementById("previewFrame");
+const fallback = document.getElementById("videoFallback");
+const ytLink = document.getElementById("youtubeLink");
+
+function convertToEmbed(link) {
+  if (link.includes("youtube.com/watch?v=")) {
+    const id = link.split("watch?v=")[1].split("&")[0];
+    return {
+      embed: `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`,
+      raw: `https://www.youtube.com/watch?v=${id}`
+    };
+  }
+
+  if (link.includes("youtu.be/")) {
+    const id = link.split("youtu.be/")[1].split("?")[0];
+    return {
+      embed: `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`,
+      raw: `https://www.youtube.com/watch?v=${id}`
+    };
+  }
+
+  if (link.includes("drive.google.com/file/d/")) {
+    return {
+      embed: link.replace("/view", "/preview"),
+      raw: link
+    };
+  }
+
+  return { embed: link, raw: link };
+}
+
+document.addEventListener("click", function (e) {
+  const item = e.target.closest(".js-preview");
+  if (!item) return;
+
+  const data = convertToEmbed(item.dataset.link);
+
+  fallback.style.display = "none";
+  iframe.style.display = "block";
+  iframe.src = data.embed;
+
+  // Timeout → if YouTube blocks embed
+  setTimeout(() => {
+    try {
+      if (!iframe.contentWindow) throw "blocked";
+    } catch {
+      iframe.style.display = "none";
+      fallback.style.display = "flex";
+      ytLink.href = data.raw;
+    }
+  }, 1500);
+});
+</script>
+
+{% endblock %}

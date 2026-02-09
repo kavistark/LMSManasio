@@ -1,0 +1,313 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Manage Courses{% endblock %}
+
+{% block container %}
+
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --shadow-soft: 0 15px 40px rgba(0,0,0,0.08);
+  --radius-lg: 18px;
+}
+
+/* Page Background */
+body {
+  background: linear-gradient(135deg, #e0f2fe, #ecfeff);
+}
+
+/* Header */
+.page-title {
+  font-weight: 800;
+  font-size: 1.9rem;
+}
+
+/* Tabs */
+.nav-pills {
+  background: var(--glass-bg);
+  padding: 8px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  width: fit-content;
+}
+
+.nav-pills .nav-link {
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.nav-pills .nav-link.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+}
+
+/* Glass Cards */
+.upload-box,
+.folder-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 24px;
+}
+
+/* Folder Header */
+.folder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.folder-header h5 {
+  font-weight: 700;
+}
+
+/* Table */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th {
+  background: #f1f5f9;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.table-container td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  font-weight: 600;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  border: none;
+  font-weight: 600;
+}
+
+.btn-outline-danger {
+  border-radius: 999px;
+}
+
+/* Modal */
+.modal-content {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+</style>
+
+<div class="container my-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="page-title">Manage Course Content</h2>
+      <small class="text-muted">{{ course.name }} • {{ course.code }}</small>
+    </div>
+
+    <form method="post" action="{% url 'delete_course' course.code %}"
+          onsubmit="return confirm('Delete this course?')">
+      {% csrf_token %}
+      <button class="btn btn-outline-danger btn-sm">Delete Course</button>
+    </form>
+  </div>
+
+  <!-- TABS -->
+  <ul class="nav nav-pills mb-4" id="contentTabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-target="video-folder" href="#">🎥 Videos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-target="material-folder" href="#">📄 Materials</a>
+    </li>
+  </ul>
+
+  <!-- ================= VIDEO SECTION ================= -->
+  <div class="video-folder">
+
+    <!-- Create Folder -->
+    <div class="upload-box">
+      <h5 class="mb-3">📁 Create Video Folder</h5>
+      <form method="POST" action="{% url 'create_folder' course.id %}" class="row g-2">
+        {% csrf_token %}
+        <input type="hidden" name="folder_type" value="video">
+        <div class="col-md-4">
+          <input type="text" name="folder_name" class="form-control" placeholder="Folder name" required>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Upload Video -->
+    <div class="upload-box">
+      <h5 class="mb-3">🎥 Upload Video (YouTube Link)</h5>
+      <form method="POST" action="{% url 'upload_course_material' course.id %}" class="row g-2">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="video">
+
+        <div class="col-md-3">
+          <select name="folder_id" class="form-select">
+            <option value="">No Folder</option>
+            {% for folder in course.folders.all %}
+              {% if folder.type == 'video' %}
+                <option value="{{ folder.id }}">{{ folder.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <input type="text" name="title" class="form-control" placeholder="Video title" required>
+        </div>
+
+        <div class="col-md-4">
+          <input type="url" name="link" class="form-control"
+                 placeholder="https://www.youtube.com/watch?v=xxxx" required>
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-warning w-100">Upload</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Video Folders -->
+    {% for folder in course.folders.all %}
+    {% if folder.type == 'video' %}
+    <div class="folder-card">
+      <div class="folder-header mb-3">
+        <h5>📁 {{ folder.name }}</h5>
+        <a href="{% url 'delete_folder' folder.id %}"
+           onclick="return confirm('Delete folder?')"
+           class="btn btn-sm btn-danger">Delete</a>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Title</th><th>Link</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            {% for material in folder.coursematerial_set.all %}
+            <tr>
+              <td>{{ material.title }}</td>
+              <td>
+                <a href="{{ material.link }}" target="_blank"
+                   class="btn btn-sm btn-outline-primary">▶ Open</a>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal{{ material.id }}">
+                  ✏ Edit
+                </button>
+                <a href="{% url 'delete_material' material.id %}"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Delete?')">
+                   Delete
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-muted text-center">No videos</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- ================= MATERIAL SECTION ================= -->
+  <div class="material-folder" style="display:none;">
+
+    <div class="upload-box">
+      <h5 class="mb-3">📄 Upload Material</h5>
+      <form method="POST" action="{% url 'upload_course_material' course.id %}" class="row g-2">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="material">
+
+        <div class="col-md-3">
+          <select name="folder_id" class="form-select">
+            <option value="">No Folder</option>
+            {% for folder in course.folders.all %}
+              {% if folder.type == 'material' %}
+                <option value="{{ folder.id }}">{{ folder.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <input type="text" name="title" class="form-control" placeholder="Material title" required>
+        </div>
+
+        <div class="col-md-4">
+          <input type="url" name="link" class="form-control" placeholder="Google Drive / PDF link" required>
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-warning w-100">Upload</button>
+        </div>
+      </form>
+    </div>
+
+    {% for folder in course.folders.all %}
+    {% if folder.type == 'material' %}
+    <div class="folder-card">
+      <h5>📁 {{ folder.name }}</h5>
+      <table class="table">
+        {% for material in folder.coursematerial_set.all %}
+        <tr>
+          <td>{{ material.title }}</td>
+          <td>
+            <a href="{{ material.link }}" target="_blank"
+               class="btn btn-sm btn-outline-primary">Open</a>
+          </td>
+          <td>
+            <a href="{% url 'delete_material' material.id %}"
+               class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-muted text-center">No materials</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- TAB SCRIPT -->
+<script>
+document.querySelectorAll('#contentTabs .nav-link').forEach(tab => {
+  tab.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('#contentTabs .nav-link').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelector('.video-folder').style.display = 'none';
+    document.querySelector('.material-folder').style.display = 'none';
+    document.querySelector('.' + this.dataset.target).style.display = 'block';
+  });
+});
+</script>
+
+{% endblock %}

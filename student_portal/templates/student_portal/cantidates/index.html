@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Analytics Professional Program | StudyLMS</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: '#e6f0fd',
+                DEFAULT: '#0050b3',
+                dark: '#003a8c',
+              },
+              secondary: {
+                light: '#f5f5f5',
+                DEFAULT: '#595959',
+                dark: '#262626',
+              },
+              accent: {
+                DEFAULT: '#096dd9',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .animate-marquee {
+      display: inline-block;
+      animation: marquee 25s linear infinite;
+    }
+
+    /* Marquee Scroll */
+    .scroll-container {
+      width: 100%;
+      overflow: hidden;
+      background: #f9f9f9;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .scroll-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 25s linear infinite;
+      font-size: 1.2rem;
+    }
+    @keyframes scroll-left {
+      from { transform: translateX(0%); }
+      to { transform: translateX(-100%); }
+    }
+
+    /* Typing Cursor */
+    #typing-text::after {
+      content: '|';
+      animation: blink 1s infinite;
+      color: #00B0F0;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Entrance Animations */
+    @keyframes fade-in-left {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fade-in-right {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-fade-in-left {
+      animation: fade-in-left 1s ease-out both;
+    }
+    .animate-fade-in-right {
+      animation: fade-in-right 1s ease-out both;
+    }
+  </style>
+
+  <!-- Typing Animation -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const words = ["Data Analytics", "AI", "Power BI", "Python", "SQL"];
+      const typingElement = document.getElementById("typing-text");
+
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      const typingSpeed = 120;
+      const pauseAfterTyping = 1000;
+      const pauseAfterDeleting = 500;
+
+      function typeRotate() {
+        const currentWord = words[wordIndex];
+        const displayedText = isDeleting
+          ? currentWord.substring(0, charIndex--)
+          : currentWord.substring(0, charIndex++);
+
+        typingElement.textContent = displayedText;
+
+        if (!isDeleting && charIndex === currentWord.length + 1) {
+          isDeleting = true;
+          setTimeout(typeRotate, pauseAfterTyping);
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(typeRotate, pauseAfterDeleting);
+        } else {
+          setTimeout(typeRotate, isDeleting ? 60 : typingSpeed);
+        }
+      }
+
+      typeRotate();
+    });
+  </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleButton = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    toggleButton.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  });
+</script>
+
+</head>
+
+<body class="bg-white text-secondary-dark font-sans">
+
+<!-- Header -->
+<header class="border-b border-gray-200 bg-white sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-4">
+
+      <!-- Logo -->
+      <div class="flex items-center flex-shrink-0">
+
+        <h1 class="text-xl font-bold text-primary">DemoLMS</h1>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-8" id="mobile-menu">
+
+        <a href="{% url 'student_login' %}" class="bg-primary text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary-dark transition-colors">
+          Start Now
+        </a>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-secondary focus:outline-none" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-[#DDF3FF] to-[#F0F9FF] overflow-hidden">
+  
+  <!-- Marquee Banner -->
+  <div class="overflow-hidden bg-gradient-to-r from-[#e6f0fd] to-[#f0f9ff] border-y border-blue-200">
+    <div class="whitespace-nowrap animate-marquee text-[#003a8c] font-semibold text-base sm:text-lg py-3 tracking-wide">
+      <span class="mx-6">Learn Data Analytics and AI in English</span>
+      <span class="mx-6">|</span>
+      <span class="mx-6">हिंदी में डेटा एनालिटिक्स और एआई सीखें</span>
+      <span class="mx-6">|</span>
+      <span class="mx-6">தமிழ் மொழியில் டேட்டா அனலிட்டிக்ஸ் மற்றும் ஏ.ஐ.யை கற்றுக்கொள்ளுங்கள்</span>
+      <span class="mx-6">|</span>
+      <span class="mx-6">ಕನ್ನಡದಲ್ಲಿ ಡೇಟಾ ಅನಾಲಿಟಿಕ್ಸ್ ಮತ್ತು ಎಐ ಕಲಿಯಿ</span>
+    </div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="md:flex md:items-center md:justify-between gap-10">
+
+      <!-- Left Content -->
+      <div class="md:w-1/2 mb-12 md:mb-0 animate-fade-in-left">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-[#083C6C] leading-tight mb-6">
+          CompanyName Your Career in <span id="typing-text" class="text-[#00B0F0]"></span>
+        </h2>
+        <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
+          A comprehensive professional program designed for career transition into analytics roles, tailored for both non-tech professionals and IT specialists seeking advancement.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#" class="inline-flex items-center gap-2 bg-[#00B0F0] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#008dcc] transition-all duration-300 shadow-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            Explore Program
+          </a>
+          <a href="#" class="inline-flex items-center gap-2 border border-[#00B0F0] text-[#00B0F0] px-6 py-3 rounded-lg font-semibold hover:bg-[#E0F7FF] transition-all duration-300 shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 4v16m8-8H4" />
+            </svg>
+            Request Information
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Image Layout -->
+      <div class="md:w-2/4  max-w-4xl animate-fade-in-right relative mt-10 md:mt-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+
+          <!-- Left Column: Two Stacked Cards -->
+          <div class="space-y-6">
+            <!-- Top Image -->
+            <div class="bg-blue-500 p-3 rounded-3xl shadow-xl relative group">
+              <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=300&fit=crop&crop=face" alt="Student with laptop" class="w-full h-full object-cover" />
+              </div>
+              <!-- Refresh Icon -->
+              <div class="absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center text-blue-600 shadow-lg group-hover:rotate-180 transition-transform duration-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Bottom Image -->
+            <div class="bg-green-400 p-3 rounded-3xl shadow-xl">
+              <div class="w-full h-48 bg-gradient-to-br from-green-300 to-green-500 rounded-2xl overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" alt="Student learning online" class="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: One Large Image -->
+          <div class="flex justify-center">
+            <div class="bg-orange-500 p-3 rounded-3xl shadow-xl">
+              <div class="w-full h-80 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=500&fit=crop&crop=face" alt="Student studying" class="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Dots -->
+        <div class="absolute -top-4 -left-4 w-4 h-4 bg-gray-300 rounded-full animate-bounce"></div>
+        <div class="absolute top-12 right-8 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
+        <div class="absolute bottom-16 left-12 w-2 h-2 bg-orange-400 rounded-full animate-bounce delay-200"></div>
+        <div class="absolute -bottom-2 -right-2 w-5 h-5 bg-green-400 rounded-full animate-pulse delay-500"></div>
+
+        <!-- Plus Signs -->
+        <div class="absolute top-8 right-16 text-gray-400 text-xl font-light">+</div>
+        <div class="absolute bottom-24 left-8 text-gray-400 text-xl font-light">+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+  <!-- Program Overview -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Logo -->
+    <div class="text-center mb-10">
+      {% comment %} <img src="/static/img/colgstackLogo.png" alt="Colgstack Logo" class="mx-auto w-48 h-auto mb-4"> {% endcomment %}
+      <h3 class="text-3xl font-extrabold text-gray-900">Professional Career Transition Program</h3>
+      <p class="text-gray-600 text-lg mt-2 max-w-2xl mx-auto">A structured pathway to prepare you for in-demand data analytics roles</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <!-- Card 1 -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-3 text-gray-800">Comprehensive Curriculum</h4>
+        <p class="text-gray-600 text-sm leading-relaxed">Industry-aligned content covering Excel, SQL, Power BI, Python, and data visualization techniques with practical applications.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-orange-100 text-orange-500 mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M8 7V3m8 4V3m-9 8h10m-11 4h12m-13 4h14" />
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-3 text-gray-800">Career Development</h4>
+        <p class="text-gray-600 text-sm leading-relaxed">Resume optimization, interview preparation, technical assessments, and professional networking opportunities.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
+        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-green-100 text-green-600 mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-3 text-gray-800">Industry Connection</h4>
+        <p class="text-gray-600 text-sm leading-relaxed">Access to exclusive employer partnerships, job placement assistance, and interaction with industry professionals.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Career Roadmap with Brand Colors -->
+<!-- Career Roadmap with Colgstack Theme -->
+<section class="py-20 bg-gradient-to-br from-[#E8F6FF] via-[#F5F5F5] to-[#E6FFE8]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Section Title -->
+    <div class="text-center mb-16">
+      <h3 class="text-3xl font-extrabold text-gray-800">📈 Your Career Transition Path</h3>
+      <p class="text-gray-600 mt-2 text-lg max-w-2xl mx-auto">A systematic approach to transform your career into data analytics</p>
+    </div>
+
+    <!-- Desktop Timeline -->
+    <div class="hidden md:flex justify-between items-center relative">
+      <div class="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-[#00B0F0] via-[#F58025] to-[#8BC53F] z-0"></div>
+
+      <div class="relative z-10 flex justify-between w-full">
+
+        <!-- Step 1 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-white border-2 border-[#00B0F0] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg class="w-6 h-6 text-[#00B0F0]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 12h6m-3 -3v6" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Skills Development</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-white border-2 border-[#00B0F0] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg class="w-6 h-6 text-[#00B0F0]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M8 16l-4-4 4-4m8 8l4-4-4-4" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Project Portfolio</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-white border-2 border-[#F58025] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg class="w-6 h-6 text-[#F58025]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h8m-8 6h16" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Technical Assessment</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-white border-2 border-[#F58025] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg class="w-6 h-6 text-[#F58025]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M8 7V3m8 4V3m-9 8h10m-11 4h12" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Interview Preparation</p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-white border-2 border-[#8BC53F] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg class="w-6 h-6 text-[#8BC53F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 10h11m0 0l-4 4m4-4l-4-4" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Job Application</p>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="flex flex-col items-center w-1/6 text-center group">
+          <div class="bg-[#8BC53F] text-white rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-gray-800">Career Transition</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Timeline -->
+    <div class="md:hidden mt-12 space-y-6">
+      <div class="flex items-start gap-4">
+        <div class="bg-[#00B0F0] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">1</div>
+        <div>
+          <p class="font-semibold text-gray-800">Skills Development</p>
+          <p class="text-sm text-gray-600 mt-1">Build foundational and advanced analytics capabilities</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="bg-[#00B0F0] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">2</div>
+        <div>
+          <p class="font-semibold text-gray-800">Project Portfolio</p>
+          <p class="text-sm text-gray-600 mt-1">Create industry-relevant data projects</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="bg-[#F58025] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">3</div>
+        <div>
+          <p class="font-semibold text-gray-800">Technical Assessment</p>
+          <p class="text-sm text-gray-600 mt-1">Practice and master technical challenges</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="bg-[#F58025] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">4</div>
+        <div>
+          <p class="font-semibold text-gray-800">Interview Preparation</p>
+          <p class="text-sm text-gray-600 mt-1">Mock interviews and feedback sessions</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="bg-[#8BC53F] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">5</div>
+        <div>
+          <p class="font-semibold text-gray-800">Job Application</p>
+          <p class="text-sm text-gray-600 mt-1">Strategic job search and application support</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="bg-[#8BC53F] text-white rounded-full w-10 h-10 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-800">Career Transition</p>
+          <p class="text-sm text-gray-600 mt-1">Successfully transition to analytics role</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Career Paths with Colgstack Theme -->
+<section class="py-20 bg-gradient-to-br from-[#E8F6FF] via-white to-[#E6FFE8]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Title -->
+    <div class="text-center mb-14">
+      <h3 class="text-3xl font-extrabold text-gray-800">🎯 Career Transition Pathways</h3>
+      <p class="text-gray-600 text-lg max-w-2xl mx-auto mt-2">Specialized tracks based on your background and career goals</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid md:grid-cols-2 gap-10">
+
+      <!-- Card 1: Non-Tech -->
+      <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all bg-white">
+        <div class="bg-[#00B0F0] p-5 border-l-4 border-[#8BC53F]">
+          <h4 class="text-xl font-semibold text-white">Non-Technical to Analytics Professional</h4>
+        </div>
+        <div class="p-6">
+          <p class="text-gray-600 mb-5">Designed for professionals from finance, operations, marketing, and other non-technical backgrounds to transition into analytics roles.</p>
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Focus on business analytics fundamentals</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Leverage existing domain expertise</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Excel, SQL, and visualization tools</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2: IT Pro -->
+      <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all bg-white">
+        <div class="bg-[#F58025] p-5 border-l-4 border-[#00B0F0]">
+          <h4 class="text-xl font-semibold text-white">IT Professional to Data Specialist</h4>
+        </div>
+        <div class="p-6">
+          <p class="text-gray-600 mb-5">Tailored for IT professionals looking to specialize in high-growth data fields such as business intelligence and data engineering.</p>
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Advanced data modeling and engineering</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Python programming for analytics</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
+              <span class="text-sm text-gray-700">Data infrastructure and architecture</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+ <!-- Call to Action with Colgstack Theme -->
+<section class="py-16 bg-gradient-to-r from-[#00B0F0] to-[#8BC53F]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h3 class="text-3xl font-extrabold text-white mb-6">🚀 Start Your Professional Analytics Journey Today</h3>
+    <p class="text-white/90 mb-8 max-w-2xl mx-auto text-lg">Join thousands of professionals who have successfully transitioned into rewarding data analytics careers through our structured program.</p>
+    
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#" class="bg-white text-[#00B0F0] px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-100 transition">📩 Request Program Details</a>
+      <a href="#" class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#00B0F0] transition">📞 Schedule a Consultation</a>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Footer -->
+  <footer class="bg-secondary-dark text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h4 class="text-lg font-semibold mb-4">StudyLMS</h4>
+          <p class="text-gray-300 text-sm">Empowering professionals to transition into data analytics careers through structured learning and career support.</p>
+        </div>
+        
+        <div>
+          <h5 class="font-semibold mb-4">Programs</h5>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="#" class="hover:text-white">Data Analytics</a></li>
+            <li><a href="#" class="hover:text-white">Business Intelligence</a></li>
+            <li><a href="#" class="hover:text-white">Data Science Fundamentals</a></li>
+            <li><a href="#" class="hover:text-white">Corporate Training</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h5 class="font-semibold mb-4">Resources</h5>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li><a href="#" class="hover:text-white">Success Stories</a></li>
+            <li><a href="#" class="hover:text-white">Career Resources</a></li>
+            <li><a href="#" class="hover:text-white">Blog</a></li>
+            <li><a href="#" class="hover:text-white">Events</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h5 class="font-semibold mb-4">Contact</h5>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li>info@studylms.com</li>
+            <li>+91 22 1234 5678</li>
+            <li>Mumbai | Bangalore | Hyderabad</li>
+          </ul>
+          <div class="flex space-x-4 mt-4">
+            <a href="#" class="text-gray-300 hover:text-white">
+              <span class="sr-only">LinkedIn</span>
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
+              </svg>
+            </a>
+            <a href="#" class="text-gray-300 hover:text-white">
+              <span class="sr-only">Twitter</span>
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+              </svg>
+            </a>
+            <a href="#" class="text-gray-300 hover:text-white">
+              <span class="sr-only">YouTube</span>
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-sm text-gray-400">&copy; 2025 StudyLMS. All rights reserved.</p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+          <a href="#" class="text-sm text-gray-400 hover:text-white">Privacy Policy</a>
+          <a href="#" class="text-sm text-gray-400 hover:text-white">Terms of Service</a>
+          <a href="#" class="text-sm text-gray-400 hover:text-white">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Newsletter Signup -->
+  <section class="fixed bottom-0 right-0 m-6 z-50" id="newsletter-popup">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-md">
+      <div class="flex justify-between items-start mb-3">
+        <h5 class="font-semibold text-secondary-dark">Stay Updated</h5>
+        <button onclick="document.getElementById('newsletter-popup').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <p class="text-secondary text-sm mb-3">Subscribe to receive program updates and analytics industry insights.</p>
+      <div class="flex">
+        <input type="email" placeholder="Enter your email" class="flex-grow px-3 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-1 focus:ring-primary" />
+        <button class="bg-primary text-white px-4 py-2 rounded-r hover:bg-primary-dark transition-colors">Subscribe</button>
+      </div>
+    </div>
+  </section>
+<script>
+  // tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#00AEEF',
+        secondary: '#F7941D',
+        accent: '#8DC63F',
+        'secondary-dark': '#333333',
+        'secondary-light': '#FFF7F0',
+      },
+    },
+  },
+};
+
+</script>
+</body>
+</html>
+
+

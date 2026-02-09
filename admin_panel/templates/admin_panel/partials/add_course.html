@@ -1,0 +1,203 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block container %}
+
+<style>
+/* ===== PAGE WRAPPER ===== */
+.course-wrapper {
+  background: linear-gradient(135deg, #e0f2fe, #ecfeff);
+  padding: 32px;
+  border-radius: 24px;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+  margin-bottom: 26px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ===== GLASS CARD ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* ===== CARD HEADER ===== */
+.glass-card-header {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 18px 24px;
+}
+
+.glass-card-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ===== CARD BODY ===== */
+.glass-card-body {
+  padding: 30px;
+}
+
+/* ===== FORM GRID ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.form-control,
+textarea {
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  border: 1px solid #e2e8f0;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* ===== FILE UPLOAD ===== */
+.file-upload {
+  border: 2px dashed #c7d2fe;
+  padding: 18px;
+  border-radius: 16px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.file-upload input {
+  border: none;
+  background: transparent;
+}
+
+/* ===== ACTION BUTTON ===== */
+.submit-btn {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 12px 30px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* ===== SUCCESS ALERT ===== */
+.alert {
+  border-radius: 14px;
+  font-size: 0.9rem;
+}
+</style>
+
+<div class="container my-4">
+  <div class="course-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>Add Course</h1>
+      <div class="breadcrumb">
+        Home <span class="mx-1">›</span> Courses <span class="mx-1">›</span> Add Course
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="glass-card">
+
+      <!-- CARD HEADER -->
+      <div class="glass-card-header">
+        <h2>📘 Course Information</h2>
+      </div>
+
+      <!-- CARD BODY -->
+      <div class="glass-card-body">
+
+        <form method="post" action="{% url 'add_course' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- COURSE NAME + CODE -->
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Course Name</label>
+              <input type="text" name="name" class="form-control" placeholder="e.g. Full Stack Development" required>
+            </div>
+
+            <div class="form-group">
+              <label>Course Code</label>
+              <input type="text" name="code" class="form-control" placeholder="e.g. FS101" required>
+            </div>
+          </div>
+
+          <!-- DESCRIPTION -->
+          <div class="form-group mb-4">
+            <label>Course Description</label>
+            <textarea name="description" class="form-control"
+              placeholder="Brief overview of the course, learning outcomes, tools, and objectives..."></textarea>
+          </div>
+
+          <!-- FILE UPLOAD -->
+          <div class="form-group mb-4">
+            <label>Upload Course Material</label>
+            <div class="file-upload">
+              <input type="file" name="material" class="form-control">
+              <small class="text-muted d-block mt-2">
+                PDF, PPT, DOC, ZIP (optional)
+              </small>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="text-end">
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-save me-1"></i> Save Course
+            </button>
+          </div>
+        </form>
+
+        {% if success %}
+          <div class="alert alert-success mt-4">
+            ✅ Course added successfully!
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock container %}

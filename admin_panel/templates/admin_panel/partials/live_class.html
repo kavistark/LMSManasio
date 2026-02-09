@@ -1,0 +1,185 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Live Class{% endblock %}
+
+{% block container %}
+
+<style>
+:root {
+  --primary: #2563eb;
+  --secondary: #64748b;
+  --success: #16a34a;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+/* WRAPPER */
+.live-wrapper {
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  padding: 32px;
+  border-radius: 24px;
+}
+
+/* HEADER */
+.live-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.live-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.live-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* CARD */
+.live-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 26px;
+}
+
+/* FORM */
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+.send-btn {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 12px 26px;
+  border-radius: 14px;
+  font-weight: 600;
+  color: white;
+  width: fit-content;
+}
+
+.send-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.3);
+}
+
+/* SUCCESS */
+.alert-success {
+  border-radius: 14px;
+  font-size: 0.9rem;
+}
+
+/* INFO BOX */
+.info-box {
+  background: #f1f5f9;
+  border: 1px dashed #c7d2fe;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.info-box i {
+  color: #2563eb;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .live-wrapper {
+    padding: 20px;
+  }
+  .live-title {
+    font-size: 1.5rem;
+  }
+}
+</style>
+
+<div class="container my-4">
+  <div class="live-wrapper">
+
+    <!-- HEADER -->
+    <div class="live-header">
+      <div>
+        <div class="live-title">
+          <i class="fas fa-video me-2 text-primary"></i> Live Class Broadcast
+        </div>
+        <div class="live-subtitle">
+          Send announcements or meeting links to all students instantly
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="live-card">
+
+      <div class="info-box mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        This message will be visible to <strong>all students</strong> on their dashboard.
+      </div>
+
+      <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="form-group mb-3">
+          <label>Announcement Message</label>
+          <textarea
+            name="broadcast_text"
+            rows="4"
+            class="form-control"
+            placeholder="Enter live class update, announcement, or instruction..."
+            required></textarea>
+        </div>
+
+        <div class="form-group mb-4">
+          <label>Optional Link (Zoom / Meet / YouTube)</label>
+          <input
+            type="url"
+            name="broadcast_link"
+            class="form-control"
+            placeholder="https://meet.google.com/xxxx or https://youtube.com/live"
+            pattern="https?://.+"
+            title="Please enter a valid URL">
+        </div>
+
+        <button type="submit" class="send-btn">
+          <i class="fas fa-paper-plane me-1"></i> Send Broadcast
+        </button>
+      </form>
+
+      {% if message %}
+        <div class="alert alert-success mt-4">
+          ✅ <strong>Broadcast Sent Successfully!</strong><br>
+          "{{ message }}"
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

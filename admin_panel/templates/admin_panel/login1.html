@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --bg-gradient: linear-gradient(135deg, #e0e7ff, #f0f9ff);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --border: rgba(255, 255, 255, 0.4);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --shadow: 0 25px 60px rgba(0,0,0,0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* BACKGROUND GLOW SHAPES */
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #6366f1, transparent);
+      opacity: 0.25;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    body::before {
+      top: -80px;
+      left: -80px;
+    }
+
+    body::after {
+      bottom: -100px;
+      right: -100px;
+    }
+
+    /* LOGIN CARD */
+    .login-box {
+      width: 380px;
+      padding: 36px;
+      border-radius: 18px;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 2;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .login-box p {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 14px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #c7d2fe;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.4);
+    }
+
+    .error {
+      margin-top: 16px;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* FOOTER */
+    .footer-text {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== BOTTOM RIGHT IMAGE ===== */
+    .corner-image {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      width: 220px;
+      opacity: 0.95;
+      z-index: 1;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @media (max-width: 768px) {
+      .corner-image {
+        width: 140px;
+        opacity: 0.8;
+      }
+
+      .login-box {
+        width: 90%;
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN CARD -->
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <p>Sign in to access the dashboard</p>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label>Username</label>
+      <input type="text" name="username" placeholder="Enter admin username" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter password" required>
+
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    {% if error %}
+      <div class="error">❌ Invalid username or password</div>
+    {% endif %}
+
+    <div class="footer-text">
+      © {{ year|default:"2026" }} Manasio Admin Dashboard
+    </div>
+  </div>
+
+  <!-- Bottom Right Decorative Image -->
+  <img src="" 
+       alt="Login Illustration"
+       class="corner-image">
+
+</body>
+</html>

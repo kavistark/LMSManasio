@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Student Dashboard {% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --dark:rgb(76, 81, 131);
+      --light: #f8f9fa;
+      --success: #4cc9f0;
+      --warning: #ffba08;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: var(--dark);
+      padding-top: 0; /* Removed padding-top */
+    }
+
+    header {
+      background: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    .header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .scrolling-text {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 0;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 0.9rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .scrolling-text span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 15s linear infinite;
+      color: #fff;
+    }
+
+    .scrolling-text a {
+      color: #f1c40f !important;
+      text-decoration: none;
+      margin-left: 0.5rem;
+      transition: opacity 0.2s;
+    }
+
+    .scrolling-text a:hover {
+      opacity: 0.8;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+      margin-top: 7rem; /* Adjusted for header height */
+    }
+
+    .sidebar {
+      width: 260px;
+      background: white;
+      height: calc(100vh - 7rem);
+      padding: 1.5rem;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+      position: fixed;
+      top: 7rem; /* Adjusted for header height */
+      left: 0;
+      overflow-y: auto;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .notification-badge {
+      background: var(--warning);
+      color: var(--dark);
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--dark);
+      text-decoration: none;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .main {
+      margin-left: 280px; /* Adjusted to account for sidebar width + padding */
+      padding: 2.5rem;
+      width: calc(100% - 280px);
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .badge {
+      padding: 0.3rem 0.8rem;
+      background: var(--light);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+    }
+
+    .sidebar-header {
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-main">
+    <div class="header-content">
+      <h1>DemoLMS</h1>
+    </div>
+    <div class="profile-section">
+      <img src="/api/placeholder/40/40" class="profile-img" alt="Profile">
+      <span>{{ student.name }}</span>
+    </div>
+  </div>
+  <div class="scrolling-text">
+    <span>DATA analytics class today at 9 PM - <a href="#">Join GMeet</a></span>
+  </div>
+</header>
+
+<div class="container">
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>Dashboard</h2>
+  </div>
+  <a href="{% url 'student_dashboard' %}" class="nav-item {% if request.path == '/dashboard/' %}active{% endif %}">
+    <i class="fas fa-book-open"></i> Study Materials
+  </a>
+  <a href="{% url 'student_jobs' %}" class="nav-item {% if request.path == '/jobs/' %}active{% endif %}">
+    <i class="fas fa-briefcase"></i> Career Opportunities
+  </a>
+  <a href="{% url 'student_mock_interview' %}" class="nav-item {% if request.path == '/mock-interview/' %}active{% endif %}">
+    <i class="fas fa-comments"></i> Mock Interviews
+  </a>
+  <a href="{% url 'progress_tracking' %}" class="nav-item {% if request.path == '/progress/' %}active{% endif %}">
+    <i class="fas fa-chart-line"></i> Progress Tracking
+  </a>
+  <a href="{% url 'qna_forum' %}" class="nav-item {% if request.path == '/qna/' %}active{% endif %}">
+    <i class="fas fa-question-circle"></i> Q&A Forum
+  </a>
+  <a href="{% url 'feedback' %}" class="nav-item {% if request.path == '/feedback/' %}active{% endif %}">
+    <i class="fas fa-comment-dots"></i> Feedback
+  </a>
+  <a href="{% url 'student_calendar' %}" class="nav-item {% if request.path == '/student-dashboard/calendar/' %}active{% endif %}">
+    <i class="fas fa-calendar-alt"></i> Calendar
+  </a>
+
+
+</nav>
+
+
+
+  <main class="main">
+    <div class="dashboard-header">
+      <h2 class="section-title">Welcome Back, {{ student.name }}</h2>
+    </div>
+    
+    {% block content %}
+    <!-- Child templates will inject content here -->
+    {% endblock %}
+  </main>
+</div>
+
+</body>
+</html>

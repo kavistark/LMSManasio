@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Superuser Panel</title>
+  <link rel="stylesheet" href="{% static 'superuser_admin/css/superuser.css' %}">
+</head>
+<body>
+
+<div class="navbar">
+  <strong>🛡 Superuser Panel</strong>
+  <span style="float:right">
+    <a href="{% url 'superuser_dashboard' %}">Dashboard</a>
+    <a href="{% url 'add_admin' %}">Add Admin</a>
+    <a href="{% url 'admin_manage' %}">Manage Admins</a>
+    <a href="{% url 'superuser_logout' %}">Logout</a>
+  </span>
+</div>
+
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

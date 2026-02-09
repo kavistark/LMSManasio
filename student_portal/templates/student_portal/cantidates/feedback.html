@@ -1,0 +1,130 @@
+{% extends "base1.html" %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<style>
+  .feedback-wrapper {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .feedback-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: fadeUp 0.6s ease;
+  }
+
+  .feedback-header {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+    padding: 22px;
+    text-align: center;
+  }
+
+  .feedback-header h2 {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .feedback-body {
+    padding: 25px;
+  }
+
+  .feedback-body label {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .feedback-body textarea {
+    border-radius: 12px;
+    padding: 14px;
+    resize: none;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+
+  .feedback-body textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .submit-btn {
+    width: 100%;
+    border-radius: 30px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+  }
+
+  .alert {
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="feedback-wrapper">
+  <div class="feedback-card">
+
+    <div class="feedback-header">
+      <h2><i class="fas fa-comment-dots me-2"></i>Share Your Feedback</h2>
+      <p class="mb-0 mt-1 small">We value your thoughts and suggestions</p>
+    </div>
+
+    <div class="feedback-body">
+      {% if submitted %}
+        <div class="alert alert-success d-flex align-items-center mb-3">
+          <i class="fas fa-check-circle me-2"></i>
+          <span>Thank you for your feedback!</span>
+        </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="feedbackTextarea" class="form-label">Your Message</label>
+          <textarea
+            id="feedbackTextarea"
+            name="message"
+            rows="5"
+            class="form-control"
+            placeholder="Write your feedback here..."
+            required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">
+          <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

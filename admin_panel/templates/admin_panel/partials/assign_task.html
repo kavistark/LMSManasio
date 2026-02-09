@@ -1,0 +1,271 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Assign Task{% endblock %}
+
+{% block container %}
+
+<style>
+:root {
+  --primary: #2563eb;
+  --secondary: #64748b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* PAGE WRAPPER */
+.assign-wrapper {
+  background: linear-gradient(135deg, #e0f2fe, #ecfeff);
+  padding: 28px;
+  border-radius: 24px;
+}
+
+/* HEADER */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* CARD */
+.task-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.task-card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-card-header h2 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.task-card-body {
+  padding: 22px;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+/* TASK LIST */
+.assigned-list {
+  margin-top: 32px;
+}
+
+.assigned-list h3 {
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.task-item {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-title {
+  font-weight: 600;
+}
+
+.task-meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* PRIORITY BADGES */
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.badge.low {
+  background: #ecfeff;
+  color: #0369a1;
+}
+
+.badge.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge.high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="container my-4">
+  <div class="assign-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <h1>📝 Assign Task</h1>
+        <div class="breadcrumb">
+          Home <span class="mx-1">›</span> Assign Task
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="task-card">
+      <div class="task-card-header">
+        <h2>Task Assignment</h2>
+      </div>
+
+      <div class="task-card-body">
+        <form method="post" action="{% url 'assign_task' %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>Student</label>
+            <select name="student_id" class="form-control" required>
+              <option value="">Select student</option>
+              {% for student in students %}
+                <option value="{{ student.id }}">{{ student.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Course (Optional)</label>
+            <select name="course_id" class="form-control">
+              <option value="">Select course</option>
+              {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Task Title</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Task Description</label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label>Deadline</label>
+              <input type="date" name="deadline" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Priority</label>
+              <select name="priority" class="form-control" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-2">
+            <i class="fas fa-paper-plane me-1"></i> Assign Task
+          </button>
+        </form>
+
+        <!-- ASSIGNED TASKS -->
+        <div class="assigned-list">
+          <h3>📌 Latest Assigned Tasks</h3>
+
+          {% for task in tasks %}
+          <div class="task-item">
+            <div>
+              <div class="task-title">{{ task.title }}</div>
+              <div class="task-meta">
+                {{ task.student.name }} • {{ task.deadline }}
+              </div>
+            </div>
+
+            <span class="badge {{ task.priority }}">
+              {{ task.priority|title }}
+            </span>
+          </div>
+          {% empty %}
+          <div class="text-muted">No tasks assigned yet.</div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

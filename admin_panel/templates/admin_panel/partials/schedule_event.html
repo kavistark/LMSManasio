@@ -1,0 +1,205 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+
+{% block title %}Schedule Event{% endblock %}
+
+{% block container %}
+
+<style>
+:root {
+  --primary: #2563eb;
+  --secondary: #64748b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* PAGE WRAPPER */
+.calendar-wrapper {
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  padding: 30px;
+  border-radius: 24px;
+}
+
+/* HEADER */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.calendar-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.calendar-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* INFO BOX */
+.calendar-info {
+  background: #f1f5f9;
+  border: 1px dashed #c7d2fe;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.calendar-info i {
+  color: var(--primary);
+}
+
+/* CALENDAR CARD */
+.calendar-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+/* FULLCALENDAR OVERRIDES */
+.fc {
+  font-family: 'Inter', sans-serif;
+}
+
+.fc-toolbar-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fc-button {
+  background: #e0e7ff !important;
+  border: none !important;
+  color: #1e40af !important;
+  font-weight: 600;
+  border-radius: 10px !important;
+}
+
+.fc-button-active {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+.fc-daygrid-event {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  border-radius: 10px;
+  padding: 4px 6px;
+  font-size: 0.75rem;
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .calendar-wrapper {
+    padding: 20px;
+  }
+  .calendar-title {
+    font-size: 1.4rem;
+  }
+}
+</style>
+
+<div class="container my-4">
+  <div class="calendar-wrapper">
+
+    <!-- HEADER -->
+    <div class="calendar-header">
+      <div>
+        <div class="calendar-title">
+          <i class="fas fa-calendar-alt me-2 text-primary"></i> Schedule Events
+        </div>
+        <div class="calendar-subtitle">
+          Create, view, and manage academic & live session schedules
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="calendar-info">
+      <i class="fas fa-info-circle me-2"></i>
+      <strong>How it works:</strong>
+      Click on a date to add an event. Click an event to delete it.
+    </div>
+
+    <!-- FORM -->
+    <form id="myForm" method="post">
+      {% csrf_token %}
+      
+      <div class="calendar-card">
+        <div id="calendar"></div>
+      </div>
+
+      <!-- HIDDEN FIELDS -->
+      <input type="hidden" id="title" name="title">
+      <input type="hidden" id="start" name="start">
+      <input type="hidden" id="end" name="end">
+      <input type="hidden" id="allDay" name="allDay">
+      <input type="hidden" id="delete" name="delete">
+    </form>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    selectable: true,
+    height: "auto",
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    events: {{ events|safe }},
+
+    eventClick: function(info) {
+      if (confirm(`Delete event "${info.event.title}"?`)) {
+        document.getElementById('title').value = info.event.title;
+        document.getElementById('start').value = info.event.startStr;
+        document.getElementById('end').value = info.event.endStr;
+        document.getElementById('allDay').value = info.event.allDay;
+        document.getElementById('delete').value = true;
+        document.getElementById("myForm").submit();
+        info.event.remove();
+      }
+    },
+
+    select: function(info) {
+      var title = prompt('Enter event title:');
+      if (title) {
+        calendar.addEvent({
+          title: title,
+          start: info.startStr,
+          end: info.endStr,
+          allDay: info.allDay
+        });
+        document.getElementById('title').value = title;
+        document.getElementById('start').value = info.startStr;
+        document.getElementById('end').value = info.endStr;
+        document.getElementById('allDay').value = info.allDay;
+        document.getElementById("myForm").submit();
+      }
+      calendar.unselect();
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+{% endblock container %}
