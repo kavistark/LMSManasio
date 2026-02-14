@@ -1,662 +1,1407 @@
 <!DOCTYPE html>
-<html lang="en">
 {% load static %}
+
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Analytics Professional Program | StudyLMS</title>
+  <title>Colgstack | Professional Analytics Program</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Tailwind Config -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                light: '#e6f0fd',
-                DEFAULT: '#0050b3',
-                dark: '#003a8c',
-              },
-              secondary: {
-                light: '#f5f5f5',
-                DEFAULT: '#595959',
-                dark: '#262626',
-              },
-              accent: {
-                DEFAULT: '#096dd9',
-              }
-            },
-            fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-            },
-          }
-        }
-      }
-    </script>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Custom Styles -->
   <style>
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #00AEEF;
+      --primary-dark: #0090c8;
+      --primary-light: #E0F6FF;
+      --secondary: #F7941D;
+      --secondary-light: #FFF7F0;
+      --accent: #8DC63F;
+      --accent-dark: #70a030;
+      --secondary-dark: #333333;
+      --white: #ffffff;
+      --gray-50: #F8FAFB;
+      --gray-100: #F0F2F5;
+      --gray-200: #E4E7EC;
+      --gray-500: #8C95A2;
+      --gray-700: #4A5568;
     }
 
-    .animate-marquee {
-      display: inline-block;
-      animation: marquee 25s linear infinite;
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--secondary-dark);
+      background: var(--white);
+      overflow-x: hidden;
     }
 
-    /* Marquee Scroll */
-    .scroll-container {
-      width: 100%;
+    h1, h2, h3, h4, h5 { font-family: 'Syne', sans-serif; }
+
+    /* ---- HEADER ---- */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray-200);
+      transition: box-shadow 0.3s;
+    }
+    header.scrolled { box-shadow: 0 4px 32px rgba(0,174,239,0.1); }
+
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 2rem;
+      height: 72px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+   
+    nav { display: flex; align-items: center; gap: 2rem; }
+    nav a {
+      font-size: 0.9rem; font-weight: 500; color: var(--gray-700);
+      text-decoration: none; transition: color 0.2s;
+    }
+    nav a:hover { color: var(--primary); }
+
+    .nav-cta {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .btn-ghost {
+      padding: 0.5rem 1.25rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--secondary-dark);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-primary {
+      padding: 0.55rem 1.4rem;
+      background: var(--primary);
+      border-radius: 8px;
+      font-size: 0.875rem; font-weight: 600;
+      color: white;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    /* ---- MARQUEE ---- */
+    .marquee-strip {
+      background: linear-gradient(90deg, var(--primary) 0%, #0090d8 50%, var(--primary) 100%);
+      padding: 0.6rem 0;
       overflow: hidden;
-      background: #f9f9f9;
-      white-space: nowrap;
-      box-sizing: border-box;
+      margin-top: 72px;
     }
-    .scroll-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll-left 25s linear infinite;
-      font-size: 1.2rem;
+    .marquee-track { display: flex; white-space: nowrap; animation: marquee-scroll 28s linear infinite; }
+    .marquee-track span {
+      font-size: 0.8rem; font-weight: 600; color: white; letter-spacing: 0.05em;
+      padding: 0 2.5rem;
+      opacity: 0.95;
     }
-    @keyframes scroll-left {
-      from { transform: translateX(0%); }
-      to { transform: translateX(-100%); }
+    .marquee-track span.sep { opacity: 0.4; padding: 0; }
+    @keyframes marquee-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
-    /* Typing Cursor */
-    #typing-text::after {
-      content: '|';
-      animation: blink 1s infinite;
-      color: #00B0F0;
+    /* ---- HERO ---- */
+    .hero {
+      min-height: calc(100vh - 72px);
+      background: var(--white);
+      display: flex; align-items: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Geometric background shapes */
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0; overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,174,239,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(141,198,63,0.07) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-grid-dot {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(0,174,239,0.12) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.5;
+    }
+
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary-light);
+      border: 1px solid rgba(0,174,239,0.25);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.4); }
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--secondary-dark);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-title .highlight {
+      color: var(--primary);
+      position: relative;
+    }
+    .hero-title .highlight::after {
+      content: '';
+      position: absolute; left: 0; bottom: 2px;
+      width: 100%; height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 2px;
+      opacity: 0.4;
+    }
+    .hero-title .word-orange { color: var(--secondary); }
+
+    #typing-cursor {
+      display: inline-block;
+      color: var(--secondary);
+      animation: blink-caret 1s step-end infinite;
       margin-left: 2px;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+    @keyframes blink-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+      animation: fadeUp 0.6s 0.2s ease both;
     }
 
-    /* Entrance Animations */
-    @keyframes fade-in-left {
-      from { opacity: 0; transform: translateX(-50px); }
-      to { opacity: 1; transform: translateX(0); }
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
     }
-    @keyframes fade-in-right {
-      from { opacity: 0; transform: translateX(50px); }
-      to { opacity: 1; transform: translateX(0); }
+    .btn-hero-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.85rem 1.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 12px;
+      font-size: 0.95rem; font-weight: 600;
+      color: white; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,174,239,0.3);
+      transition: all 0.25s;
     }
-    .animate-fade-in-left {
-      animation: fade-in-left 1s ease-out both;
+    .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,174,239,0.4); }
+    .btn-hero-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.85rem 1.75rem;
+      background: var(--secondary-light);
+      border: 1.5px solid rgba(247,148,29,0.3);
+      border-radius: 12px;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--secondary);
+      text-decoration: none;
+      transition: all 0.25s;
     }
-    .animate-fade-in-right {
-      animation: fade-in-right 1s ease-out both;
+    .btn-hero-secondary:hover { background: #FDEBD6; border-color: var(--secondary); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      animation: fadeUp 0.6s 0.4s ease both;
     }
-  </style>
+    .stat-item { }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.75rem; font-weight: 800;
+      color: var(--secondary-dark);
+    }
+    .stat-num span { color: var(--primary); }
+    .stat-label { font-size: 0.8rem; color: var(--gray-500); margin-top: 2px; font-weight: 500; }
 
-  <!-- Typing Animation -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const words = ["Data Analytics", "AI", "Power BI", "Python", "SQL"];
-      const typingElement = document.getElementById("typing-text");
+    /* Hero Visual */
+    .hero-visual {
+      position: relative;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .visual-card-main {
+      background: var(--white);
+      border-radius: 24px;
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.08);
+    }
+    .card-header-bar {
+      height: 48px;
+      background: linear-gradient(90deg, var(--primary), #0090d8);
+      display: flex; align-items: center; padding: 0 1.25rem; gap: 8px;
+    }
+    .card-header-bar .dot-btn {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .card-header-bar .dot-btn:nth-child(1) { background: #FF5F57; }
+    .card-header-bar .dot-btn:nth-child(2) { background: #FEBC2E; }
+    .card-header-bar .dot-btn:nth-child(3) { background: #28C840; }
+    .card-header-title {
+      flex: 1; text-align: center;
+      font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.85);
+    }
+    .card-body { padding: 1.5rem; }
+    .progress-row { margin-bottom: 1rem; }
+    .prog-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.78rem; font-weight: 500; color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    .prog-bar {
+      height: 8px; background: var(--gray-100); border-radius: 8px; overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%; border-radius: 8px;
+      transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .prog-fill.blue { background: linear-gradient(90deg, var(--primary), #60D0FF); }
+    .prog-fill.orange { background: linear-gradient(90deg, var(--secondary), #FFB74D); }
+    .prog-fill.green { background: linear-gradient(90deg, var(--accent), #B5E060); }
+    .prog-fill.purple { background: linear-gradient(90deg, #9B59B6, #D7A2F0); }
+    .prog-fill.teal { background: linear-gradient(90deg, #00BCD4, #80DEEA); }
 
-      let wordIndex = 0;
-      let charIndex = 0;
-      let isDeleting = false;
-      const typingSpeed = 120;
-      const pauseAfterTyping = 1000;
-      const pauseAfterDeleting = 500;
+    .module-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1.25rem;
+    }
+    .module-chip {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px; padding: 0.65rem 0.5rem;
+      text-align: center; font-size: 0.7rem; font-weight: 600;
+      color: var(--gray-700); cursor: default;
+      transition: all 0.2s;
+    }
+    .module-chip:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .module-chip .chip-icon { font-size: 1.1rem; margin-bottom: 3px; }
 
-      function typeRotate() {
-        const currentWord = words[wordIndex];
-        const displayedText = isDeleting
-          ? currentWord.substring(0, charIndex--)
-          : currentWord.substring(0, charIndex++);
+    /* Floating Cards */
+    .float-badge {
+      position: absolute;
+      background: white;
+      border-radius: 14px;
+      padding: 0.85rem 1.1rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      border: 1px solid var(--gray-100);
+    }
+    .float-badge-1 {
+      top: -20px; left: -30px;
+      display: flex; align-items: center; gap: 10px;
+      animation: float1 4s ease-in-out infinite;
+    }
+    .float-badge-2 {
+      bottom: 30px; right: -30px;
+      animation: float2 4.5s 0.5s ease-in-out infinite;
+    }
+    .float-badge-3 {
+      top: 50%; right: -20px; transform: translateY(-50%);
+      animation: float1 3.8s 1s ease-in-out infinite;
+    }
+    @keyframes float1 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+    .fb-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .fb-icon.blue { background: var(--primary-light); }
+    .fb-icon.green { background: #EDF8E1; }
+    .fb-icon.orange { background: #FFF3E4; }
+    .fb-text-big { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--secondary-dark); }
+    .fb-text-sm { font-size: 0.68rem; color: var(--gray-500); font-weight: 500; }
 
-        typingElement.textContent = displayedText;
+    .rating-stars { color: #F59E0B; font-size: 0.8rem; }
 
-        if (!isDeleting && charIndex === currentWord.length + 1) {
-          isDeleting = true;
-          setTimeout(typeRotate, pauseAfterTyping);
-        } else if (isDeleting && charIndex === 0) {
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
-          setTimeout(typeRotate, pauseAfterDeleting);
-        } else {
-          setTimeout(typeRotate, isDeleting ? 60 : typingSpeed);
-        }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+
+    /* ---- SECTION LABEL ---- */
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .section-label::before {
+      content: ''; width: 24px; height: 2px;
+      background: var(--primary); border-radius: 2px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800; line-height: 1.15;
+      color: var(--secondary-dark);
+    }
+    .section-subtitle {
+      font-size: 1rem; color: var(--gray-500);
+      max-width: 520px; margin: 0.75rem 0 0;
+      line-height: 1.65;
+    }
+    /* ---- SCROLLING CERTIFICATIONS ---- */
+
+    .trusted-logos {
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .scroll-track {
+      display: flex;
+      gap: 3rem;
+      width: max-content;
+      animation: scroll-left 25s linear infinite;
+    }
+
+    .company-logo {
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--gray-600);
+      font-size: 0.95rem;
+      padding: 10px 18px;
+      background: white;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    /* Animation */
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
       }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
 
-      typeRotate();
-    });
-  </script>
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const toggleButton = document.getElementById("menu-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
+    .company-logo {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 1.1rem; color: var(--gray-200);
+      letter-spacing: -0.02em; transition: color 0.2s;
+    }
+    .company-logo:hover { color: var(--gray-500); }
 
-    toggleButton.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
-    });
-  });
-</script>
+    /* ---- OVERVIEW ---- */
+    .overview-section {
+      padding: 6rem 2rem;
+      background: white;
+    }
+    .overview-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .overview-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      gap: 2rem; margin-bottom: 4rem; flex-wrap: wrap;
+    }
+    .overview-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    }
+    .ov-card {
+      padding: 2.25rem;
+      border-radius: 20px;
+      border: 1px solid var(--gray-200);
+      background: white;
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .ov-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 20px 20px 0 0;
+    }
+    .ov-card.blue::before { background: var(--primary); }
+    .ov-card.orange::before { background: var(--secondary); }
+    .ov-card.green::before { background: var(--accent); }
+    .ov-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.09); }
 
+    .ov-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .ov-icon.blue { background: var(--primary-light); }
+    .ov-icon.orange { background: #FFF3E4; }
+    .ov-icon.green { background: #EDF8E1; }
+
+    .ov-card h4 {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;
+      color: var(--secondary-dark);
+    }
+    .ov-card p { font-size: 0.9rem; color: var(--gray-500); line-height: 1.7; }
+    .ov-card-tag {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+    .ov-card-tag.blue { background: var(--primary-light); color: var(--primary); }
+    .ov-card-tag.orange { background: #FFF3E4; color: var(--secondary); }
+    .ov-card-tag.green { background: #EDF8E1; color: var(--accent-dark); }
+
+    /* ---- CURRICULUM ---- */
+    .curriculum-section {
+      padding: 6rem 2rem;
+      background: var(--gray-50);
+    }
+    .curriculum-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .curr-header { text-align: center; margin-bottom: 4rem; }
+    .modules-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+    }
+    .module-item {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+      display: flex; align-items: flex-start; gap: 1.25rem;
+      transition: all 0.25s;
+      cursor: default;
+    }
+    .module-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(0,174,239,0.1);
+      transform: translateY(-3px);
+    }
+    .module-num {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .module-num.c1 { background: var(--primary-light); color: var(--primary); }
+    .module-num.c2 { background: #FFF3E4; color: var(--secondary); }
+    .module-num.c3 { background: #EDF8E1; color: var(--accent-dark); }
+    .module-num.c4 { background: #F3EEFF; color: #7B52D9; }
+    .module-content h5 { font-size: 1rem; font-weight: 700; color: var(--secondary-dark); margin-bottom: 0.4rem; }
+    .module-content p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.6; }
+    .module-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .tag-pill {
+      font-size: 0.7rem; font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    /* ---- ROADMAP ---- */
+    .roadmap-section {
+      padding: 6rem 2rem;
+      background: white;
+    }
+    .roadmap-inner { max-width: 1200px; margin: 0 auto; }
+    .roadmap-header { text-align: center; margin-bottom: 5rem; }
+    .roadmap-timeline {
+      display: flex; align-items: flex-start; gap: 0;
+      position: relative;
+    }
+    .roadmap-timeline::before {
+      content: '';
+      position: absolute; top: 28px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      z-index: 0;
+    }
+    .roadmap-step {
+      flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center;
+      position: relative; z-index: 1;
+    }
+    .step-node {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      border: 3px solid white;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      margin-bottom: 1.25rem;
+      transition: transform 0.2s;
+      cursor: default;
+    }
+    .step-node:hover { transform: scale(1.15); }
+    .step-node.s1 { background: var(--primary); color: white; }
+    .step-node.s2 { background: #5BC3F7; color: white; }
+    .step-node.s3 { background: var(--secondary); color: white; }
+    .step-node.s4 { background: #F9B04A; color: white; }
+    .step-node.s5 { background: var(--accent); color: white; }
+    .step-node.s6 { background: var(--accent-dark); color: white; }
+    .step-title { font-size: 0.85rem; font-weight: 700; color: var(--secondary-dark); margin-bottom: 0.3rem; }
+    .step-desc { font-size: 0.75rem; color: var(--gray-500); line-height: 1.5; max-width: 120px; }
+
+    /* ---- CAREER PATHS ---- */
+    .paths-section {
+      padding: 6rem 2rem;
+      background: var(--gray-50);
+    }
+    .paths-inner { max-width: 1200px; margin: 0 auto; }
+    .paths-header { margin-bottom: 4rem; }
+    .paths-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;
+    }
+    .path-card {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      background: white;
+      transition: all 0.3s;
+    }
+    .path-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(0,0,0,0.1); }
+    .path-card-head {
+      padding: 2rem;
+      position: relative;
+    }
+    .path-card-head.blue { background: linear-gradient(135deg, var(--primary) 0%, #0090d8 100%); }
+    .path-card-head.orange { background: linear-gradient(135deg, var(--secondary) 0%, #e07010 100%); }
+
+    .path-eyebrow {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7); margin-bottom: 0.5rem;
+    }
+    .path-card-head h4 { font-size: 1.3rem; font-weight: 800; color: white; line-height: 1.25; }
+    .path-card-head-icon {
+      position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+      width: 60px; height: 60px;
+      background: rgba(255,255,255,0.15); border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem;
+    }
+
+    .path-card-body { padding: 2rem; }
+    .path-card-body p { font-size: 0.9rem; color: var(--gray-700); line-height: 1.7; margin-bottom: 1.5rem; }
+    .path-feature {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 0.85rem;
+    }
+    .path-feature-dot {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; flex-shrink: 0;
+    }
+    .path-feature-dot.blue { background: var(--primary-light); color: var(--primary); }
+    .path-feature-dot.orange { background: #FFF3E4; color: var(--secondary); }
+    .path-feature span { font-size: 0.875rem; color: var(--gray-700); }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      padding: 6rem 2rem;
+      background: var(--secondary-dark);
+      position: relative; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0;
+    }
+    .cta-bg::before {
+      content: '';
+      position: absolute; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,174,239,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .cta-bg::after {
+      content: '';
+      position: absolute; bottom: -150px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(141,198,63,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .cta-inner {
+      max-width: 800px; margin: 0 auto; text-align: center;
+      position: relative; z-index: 1;
+    }
+    .cta-inner .section-label { color: var(--primary); margin-bottom: 1.25rem; }
+    .cta-inner .section-label::before { background: var(--primary); }
+    .cta-inner h3 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; color: white;
+      line-height: 1.15; margin-bottom: 1.25rem;
+    }
+    .cta-inner h3 span { color: var(--primary); }
+    .cta-inner p { font-size: 1.05rem; color: rgba(255,255,255,0.65); margin-bottom: 2.5rem; line-height: 1.7; }
+    .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .btn-cta-primary {
+      padding: 0.9rem 2rem;
+      background: var(--primary);
+      border-radius: 12px;
+      font-size: 0.95rem; font-weight: 600; color: white;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,174,239,0.35);
+      transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-cta-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .btn-cta-secondary {
+      padding: 0.9rem 2rem;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      font-size: 0.95rem; font-weight: 600; color: white;
+      text-decoration: none;
+      transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-cta-secondary:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: #1A1A1A;
+      padding: 4rem 2rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-brand .logo { margin-bottom: 1rem; }
+    .footer-brand p { font-size: 0.875rem; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 280px; }
+    .footer-social { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .social-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .footer-col h6 { font-size: 0.85rem; font-weight: 700; color: white; margin-bottom: 1.25rem; letter-spacing: 0.05em; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul li a { font-size: 0.85rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--primary); }
+    .footer-col ul li span { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+    .footer-bottom-links { display: flex; gap: 1.5rem; }
+    .footer-bottom-links a { font-size: 0.8rem; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom-links a:hover { color: white; }
+
+    /* ---- NEWSLETTER POPUP ---- */
+    .newsletter-popup {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      z-index: 200;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.16);
+      border: 1px solid var(--gray-200);
+      padding: 1.5rem;
+      max-width: 340px;
+      width: calc(100% - 3rem);
+      animation: slideInUp 0.5s 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .popup-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+    .popup-title-wrap { }
+    .popup-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); margin-bottom: 2px; }
+    .popup-title { font-size: 1rem; font-weight: 700; color: var(--secondary-dark); }
+    .popup-close {
+      width: 28px; height: 28px;
+      border-radius: 50%; background: var(--gray-100); border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: var(--gray-500);
+      transition: all 0.2s;
+    }
+    .popup-close:hover { background: var(--gray-200); color: var(--secondary-dark); }
+    .popup-desc { font-size: 0.82rem; color: var(--gray-500); margin-bottom: 1rem; line-height: 1.6; }
+    .popup-form { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--gray-200); }
+    .popup-form input {
+      flex: 1; padding: 0.6rem 0.85rem;
+      border: none; outline: none;
+      font-size: 0.85rem; font-family: inherit;
+      color: var(--secondary-dark);
+    }
+    .popup-form button {
+      padding: 0.6rem 1rem;
+      background: var(--primary); border: none; cursor: pointer;
+      color: white; font-size: 0.8rem; font-weight: 600;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .popup-form button:hover { background: var(--primary-dark); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-visual { order: -1; }
+      .float-badge-1 { left: 0; top: -10px; }
+      .float-badge-3 { display: none; }
+    }
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .overview-cards { grid-template-columns: 1fr; }
+      .modules-grid { grid-template-columns: 1fr; }
+      .paths-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .roadmap-timeline { flex-direction: column; gap: 2rem; align-items: flex-start; }
+      .roadmap-timeline::before { display: none; }
+      .roadmap-step { flex-direction: row; text-align: left; gap: 1rem; align-items: flex-start; }
+      .step-desc { max-width: none; }
+    }
+    @media (max-width: 480px) {
+      .footer-top { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.5rem; }
+    }
+    .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 40px;   /* adjust as needed */
+  width: auto;
+}
+
+  </style>
 </head>
-
-<body class="bg-white text-secondary-dark font-sans">
+<body>
 
 <!-- Header -->
-<header class="border-b border-gray-200 bg-white sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center py-4">
-
-      <!-- Logo -->
-      <div class="flex items-center flex-shrink-0">
-
-        <h1 class="text-xl font-bold text-primary">DemoLMS</h1>
+<header id="main-header">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">
+        <img src="{% static 'img/colgstackLogo.png' %}" alt="Colgstack Logo" class="logo-img">
       </div>
+    </a>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-8" id="mobile-menu">
-
-        <a href="{% url 'student_login' %}" class="bg-primary text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary-dark transition-colors">
-          Start Now
-        </a>
-      </nav>
-
-      <!-- Mobile Menu Button -->
-      <div class="md:hidden">
-        <button id="menu-toggle" class="text-secondary focus:outline-none" aria-label="Open menu">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-        </button>
-
-      </div>
+    <nav>
+      <a href="#overview">Program</a>
+      <a href="#curriculum">Curriculum</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#paths">Career Paths</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="{% url 'student_login' %}" class="btn-primary">Sign In</a>
     </div>
   </div>
 </header>
 
-<!-- Hero Section -->
-<section class="bg-gradient-to-br from-[#DDF3FF] to-[#F0F9FF] overflow-hidden">
-  
-  <!-- Marquee Banner -->
-  <div class="overflow-hidden bg-gradient-to-r from-[#e6f0fd] to-[#f0f9ff] border-y border-blue-200">
-    <div class="whitespace-nowrap animate-marquee text-[#003a8c] font-semibold text-base sm:text-lg py-3 tracking-wide">
-      <span class="mx-6">Learn Data Analytics and AI in English</span>
-      <span class="mx-6">|</span>
-      <span class="mx-6">हिंदी में डेटा एनालिटिक्स और एआई सीखें</span>
-      <span class="mx-6">|</span>
-      <span class="mx-6">தமிழ் மொழியில் டேட்டா அனலிட்டிக்ஸ் மற்றும் ஏ.ஐ.யை கற்றுக்கொள்ளுங்கள்</span>
-      <span class="mx-6">|</span>
-      <span class="mx-6">ಕನ್ನಡದಲ್ಲಿ ಡೇಟಾ ಅನಾಲಿಟಿಕ್ಸ್ ಮತ್ತು ಎಐ ಕಲಿಯಿ</span>
-    </div>
+<!-- Marquee -->
+<div class="marquee-strip">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>💻 Learn Python</span>
+    <span class="sep">·</span>
+    <span>⚡ Master Java</span>
+    <span class="sep">·</span>
+    <span>🌐 Become a Full Stack Developer</span>
+    <span class="sep">·</span>
+    <span>🚀 JavaScript & React</span>
+    <span class="sep">·</span>
+    <span>🛢 SQL & Database Management</span>
+    <span class="sep">·</span>
+    <span>☁ AWS & Cloud Computing</span>
+    <span class="sep">·</span>
+    <span>📊 Data Science & Machine Learning</span>
+    <span class="sep">·</span>
+    <span>🔐 Cyber Security</span>
+    <span class="sep">·</span>
+    <span>📱 Flutter & Mobile Development</span>
+    <span class="sep">·</span>
+    <span>⚙ DevOps & Kubernetes</span>
+    <span class="sep">·</span>
+
+    <!-- Repeat for smooth infinite scroll -->
+    <span>💻 Learn Python</span>
+    <span class="sep">·</span>
+    <span>⚡ Master Java</span>
+    <span class="sep">·</span>
+    <span>🌐 Become a Full Stack Developer</span>
+    <span class="sep">·</span>
+    <span>🚀 JavaScript & React</span>
+    <span class="sep">·</span>
+    <span>🛢 SQL & Database Management</span>
+    <span class="sep">·</span>
+    <span>☁ AWS & Cloud Computing</span>
+    <span class="sep">·</span>
+    <span>📊 Data Science & Machine Learning</span>
+    <span class="sep">·</span>
+    <span>🔐 Cyber Security</span>
+    <span class="sep">·</span>
+    <span>📱 Flutter & Mobile Development</span>
+    <span class="sep">·</span>
+    <span>⚙ DevOps & Kubernetes</span>
+    <span class="sep">·</span>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid-dot"></div>
   </div>
 
-  <!-- Hero Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="md:flex md:items-center md:justify-between gap-10">
-
-      <!-- Left Content -->
-      <div class="md:w-1/2 mb-12 md:mb-0 animate-fade-in-left">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-[#083C6C] leading-tight mb-6">
-          CompanyName Your Career in <span id="typing-text" class="text-[#00B0F0]"></span>
-        </h2>
-        <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
-          A comprehensive professional program designed for career transition into analytics roles, tailored for both non-tech professionals and IT specialists seeking advancement.
-        </p>
-        <div class="flex flex-wrap gap-4">
-          <a href="#" class="inline-flex items-center gap-2 bg-[#00B0F0] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#008dcc] transition-all duration-300 shadow-md">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-            Explore Program
-          </a>
-          <a href="#" class="inline-flex items-center gap-2 border border-[#00B0F0] text-[#00B0F0] px-6 py-3 rounded-lg font-semibold hover:bg-[#E0F7FF] transition-all duration-300 shadow-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M12 4v16m8-8H4" />
-            </svg>
-            Request Information
-          </a>
+  <div class="hero-inner">
+    <!-- Left Content -->
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="dot"></div>
+        Now Enrolling — Cohort 2025
+      </div>
+      <h1 class="hero-title">
+        Launch Your Career in <br>
+        <span class="word-orange" id="typing-text"></span><span id="typing-cursor">|</span>
+      </h1>
+      <p class="hero-desc">
+        A rigorous, industry-aligned program for professionals transitioning into high-demand data roles — built with mentors from top companies.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-hero-primary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
+          Explore Program
+        </a>
+        <a href="#" class="btn-hero-secondary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+          Request Brochure
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">4,200<span>+</span></div>
+          <div class="stat-label">Graduates Placed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">96<span>%</span></div>
+          <div class="stat-label">Placement Rate</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">180<span>+</span></div>
+          <div class="stat-label">Hiring Partners</div>
         </div>
       </div>
+    </div>
 
-      <!-- Right Image Layout -->
-      <div class="md:w-2/4  max-w-4xl animate-fade-in-right relative mt-10 md:mt-0">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <!-- Right Visual -->
+    <div class="hero-visual">
+      <div class="float-badge float-badge-1">
+        <div class="fb-icon blue">📊</div>
+        <div>
+          <div class="fb-text-big">Power BI</div>
+          <div class="fb-text-sm">Advanced Dashboards</div>
+        </div>
+      </div>
+      <div class="float-badge float-badge-2">
+        <div style="margin-bottom: 4px;">
+          <div class="fb-text-big" style="font-size:0.9rem">Just got hired! 🎉</div>
+          <div class="fb-text-sm">Data Analyst @ Infosys</div>
+        </div>
+        <div class="rating-stars">★★★★★</div>
+      </div>
 
-          <!-- Left Column: Two Stacked Cards -->
-          <div class="space-y-6">
-            <!-- Top Image -->
-            <div class="bg-blue-500 p-3 rounded-3xl shadow-xl relative group">
-              <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=300&fit=crop&crop=face" alt="Student with laptop" class="w-full h-full object-cover" />
-              </div>
-              <!-- Refresh Icon -->
-              <div class="absolute top-4 right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center text-blue-600 shadow-lg group-hover:rotate-180 transition-transform duration-300">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </div>
+      <div class="visual-card-main">
+        <div class="card-header-bar">
+          <div class="dot-btn"></div><div class="dot-btn"></div><div class="dot-btn"></div>
+          <div class="card-header-title">Analytics Learning Dashboard</div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+            <div>
+              <div style="font-size:0.7rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">PROGRAM PROGRESS</div>
+              <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--secondary-dark);">Module 4 / 8</div>
             </div>
-
-            <!-- Bottom Image -->
-            <div class="bg-green-400 p-3 rounded-3xl shadow-xl">
-              <div class="w-full h-48 bg-gradient-to-br from-green-300 to-green-500 rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" alt="Student learning online" class="w-full h-full object-cover" />
-              </div>
+            <div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--primary) 50%, var(--gray-100) 0);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px white,0 0 0 6px var(--primary-light);">
+              <div style="width:40px;height:40px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:800;color:var(--primary);">50%</div>
             </div>
           </div>
 
-          <!-- Right Column: One Large Image -->
-          <div class="flex justify-center">
-            <div class="bg-orange-500 p-3 rounded-3xl shadow-xl">
-              <div class="w-full h-80 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=500&fit=crop&crop=face" alt="Student studying" class="w-full h-full object-cover" />
-              </div>
-            </div>
+          <div class="progress-row">
+            <div class="prog-label"><span>Excel & Spreadsheets</span><span style="color:var(--accent-dark);font-weight:700;">100%</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:100%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="prog-label"><span>SQL Fundamentals</span><span style="color:var(--accent-dark);font-weight:700;">100%</span></div>
+            <div class="prog-bar"><div class="prog-fill green" style="width:100%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="prog-label"><span>Power BI & Viz</span><span style="color:var(--secondary);font-weight:700;">72%</span></div>
+            <div class="prog-bar"><div class="prog-fill orange" style="width:72%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="prog-label"><span>Python for Analytics</span><span style="color:var(--primary);font-weight:700;">30%</span></div>
+            <div class="prog-bar"><div class="prog-fill blue" style="width:30%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="prog-label"><span>Machine Learning</span><span style="color:var(--gray-500);font-weight:700;">—</span></div>
+            <div class="prog-bar"><div class="prog-fill purple" style="width:0%"></div></div>
+          </div>
+
+          <div class="module-grid">
+            <div class="module-chip"><div class="chip-icon">📊</div>Excel</div>
+            <div class="module-chip"><div class="chip-icon">🗄️</div>SQL</div>
+            <div class="module-chip"><div class="chip-icon">📈</div>Power BI</div>
+            <div class="module-chip"><div class="chip-icon">🐍</div>Python</div>
+            <div class="module-chip"><div class="chip-icon">🤖</div>ML/AI</div>
+            <div class="module-chip"><div class="chip-icon">🎯</div>Career</div>
           </div>
         </div>
-
-        <!-- Floating Dots -->
-        <div class="absolute -top-4 -left-4 w-4 h-4 bg-gray-300 rounded-full animate-bounce"></div>
-        <div class="absolute top-12 right-8 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
-        <div class="absolute bottom-16 left-12 w-2 h-2 bg-orange-400 rounded-full animate-bounce delay-200"></div>
-        <div class="absolute -bottom-2 -right-2 w-5 h-5 bg-green-400 rounded-full animate-pulse delay-500"></div>
-
-        <!-- Plus Signs -->
-        <div class="absolute top-8 right-16 text-gray-400 text-xl font-light">+</div>
-        <div class="absolute bottom-24 left-8 text-gray-400 text-xl font-light">+</div>
       </div>
     </div>
   </div>
 </section>
 
+<div class="trusted-section">
+  <div class="trusted-inner">
 
+    <div class="trusted-logos">
+      <div class="scroll-track">
 
+        <div class="company-logo">Microsoft Power BI Data Analyst</div>
+        <div class="company-logo">Azure Data Scientist</div>
+        <div class="company-logo">AWS Solutions Architect</div>
+        <div class="company-logo">Google Data Engineer</div>
+        <div class="company-logo">Tableau Certified Analyst</div>
+        <div class="company-logo">Oracle Java Professional</div>
+        <div class="company-logo">Certified Ethical Hacker</div>
+        <div class="company-logo">DevOps Engineer Certification</div>
 
+        <!-- Repeat for seamless infinite effect -->
+        <div class="company-logo">Microsoft Power BI Data Analyst</div>
+        <div class="company-logo">Azure Data Scientist</div>
+        <div class="company-logo">AWS Solutions Architect</div>
+        <div class="company-logo">Google Data Engineer</div>
+        <div class="company-logo">Tableau Certified Analyst</div>
+        <div class="company-logo">Oracle Java Professional</div>
+        <div class="company-logo">Certified Ethical Hacker</div>
+        <div class="company-logo">DevOps Engineer Certification</div>
 
-  <!-- Program Overview -->
-<section class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <!-- Logo -->
-    <div class="text-center mb-10">
-      {% comment %} <img src="/static/img/colgstackLogo.png" alt="Colgstack Logo" class="mx-auto w-48 h-auto mb-4"> {% endcomment %}
-      <h3 class="text-3xl font-extrabold text-gray-900">Professional Career Transition Program</h3>
-      <p class="text-gray-600 text-lg mt-2 max-w-2xl mx-auto">A structured pathway to prepare you for in-demand data analytics roles</p>
-    </div>
-
-    <!-- Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-      <!-- Card 1 -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
-        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-4">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 12h8m-8 6h16" />
-          </svg>
-        </div>
-        <h4 class="text-xl font-semibold mb-3 text-gray-800">Comprehensive Curriculum</h4>
-        <p class="text-gray-600 text-sm leading-relaxed">Industry-aligned content covering Excel, SQL, Power BI, Python, and data visualization techniques with practical applications.</p>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
-        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-orange-100 text-orange-500 mb-4">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M8 7V3m8 4V3m-9 8h10m-11 4h12m-13 4h14" />
-          </svg>
-        </div>
-        <h4 class="text-xl font-semibold mb-3 text-gray-800">Career Development</h4>
-        <p class="text-gray-600 text-sm leading-relaxed">Resume optimization, interview preparation, technical assessments, and professional networking opportunities.</p>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition duration-300 p-8 text-center">
-        <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-green-100 text-green-600 mb-4">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h4 class="text-xl font-semibold mb-3 text-gray-800">Industry Connection</h4>
-        <p class="text-gray-600 text-sm leading-relaxed">Access to exclusive employer partnerships, job placement assistance, and interaction with industry professionals.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- Career Roadmap with Brand Colors -->
-<!-- Career Roadmap with Colgstack Theme -->
-<section class="py-20 bg-gradient-to-br from-[#E8F6FF] via-[#F5F5F5] to-[#E6FFE8]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <!-- Section Title -->
-    <div class="text-center mb-16">
-      <h3 class="text-3xl font-extrabold text-gray-800">📈 Your Career Transition Path</h3>
-      <p class="text-gray-600 mt-2 text-lg max-w-2xl mx-auto">A systematic approach to transform your career into data analytics</p>
-    </div>
-
-    <!-- Desktop Timeline -->
-    <div class="hidden md:flex justify-between items-center relative">
-      <div class="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-[#00B0F0] via-[#F58025] to-[#8BC53F] z-0"></div>
-
-      <div class="relative z-10 flex justify-between w-full">
-
-        <!-- Step 1 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-white border-2 border-[#00B0F0] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg class="w-6 h-6 text-[#00B0F0]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M9 12h6m-3 -3v6" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Skills Development</p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-white border-2 border-[#00B0F0] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg class="w-6 h-6 text-[#00B0F0]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M8 16l-4-4 4-4m8 8l4-4-4-4" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Project Portfolio</p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-white border-2 border-[#F58025] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg class="w-6 h-6 text-[#F58025]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M4 6h16M4 12h8m-8 6h16" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Technical Assessment</p>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-white border-2 border-[#F58025] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg class="w-6 h-6 text-[#F58025]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M8 7V3m8 4V3m-9 8h10m-11 4h12" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Interview Preparation</p>
-        </div>
-
-        <!-- Step 5 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-white border-2 border-[#8BC53F] rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg class="w-6 h-6 text-[#8BC53F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M3 10h11m0 0l-4 4m4-4l-4-4" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Job Application</p>
-        </div>
-
-        <!-- Step 6 -->
-        <div class="flex flex-col items-center w-1/6 text-center group">
-          <div class="bg-[#8BC53F] text-white rounded-full w-12 h-12 flex items-center justify-center mb-3 group-hover:scale-110 transition shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-gray-800">Career Transition</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Timeline -->
-    <div class="md:hidden mt-12 space-y-6">
-      <div class="flex items-start gap-4">
-        <div class="bg-[#00B0F0] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">1</div>
-        <div>
-          <p class="font-semibold text-gray-800">Skills Development</p>
-          <p class="text-sm text-gray-600 mt-1">Build foundational and advanced analytics capabilities</p>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-4">
-        <div class="bg-[#00B0F0] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">2</div>
-        <div>
-          <p class="font-semibold text-gray-800">Project Portfolio</p>
-          <p class="text-sm text-gray-600 mt-1">Create industry-relevant data projects</p>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-4">
-        <div class="bg-[#F58025] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">3</div>
-        <div>
-          <p class="font-semibold text-gray-800">Technical Assessment</p>
-          <p class="text-sm text-gray-600 mt-1">Practice and master technical challenges</p>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-4">
-        <div class="bg-[#F58025] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">4</div>
-        <div>
-          <p class="font-semibold text-gray-800">Interview Preparation</p>
-          <p class="text-sm text-gray-600 mt-1">Mock interviews and feedback sessions</p>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-4">
-        <div class="bg-[#8BC53F] text-white rounded-full w-10 h-10 flex items-center justify-center font-medium">5</div>
-        <div>
-          <p class="font-semibold text-gray-800">Job Application</p>
-          <p class="text-sm text-gray-600 mt-1">Strategic job search and application support</p>
-        </div>
-      </div>
-
-      <div class="flex items-start gap-4">
-        <div class="bg-[#8BC53F] text-white rounded-full w-10 h-10 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-        </div>
-        <div>
-          <p class="font-semibold text-gray-800">Career Transition</p>
-          <p class="text-sm text-gray-600 mt-1">Successfully transition to analytics role</p>
-        </div>
       </div>
     </div>
 
   </div>
-</section>
+</div>
 
 
-<!-- Career Paths with Colgstack Theme -->
-<section class="py-20 bg-gradient-to-br from-[#E8F6FF] via-white to-[#E6FFE8]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Title -->
-    <div class="text-center mb-14">
-      <h3 class="text-3xl font-extrabold text-gray-800">🎯 Career Transition Pathways</h3>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto mt-2">Specialized tracks based on your background and career goals</p>
+<!-- Program Overview -->
+<section class="overview-section" id="overview">
+  <div class="overview-inner">
+    <div class="overview-header">
+      <div>
+        <div class="section-label">Program Overview</div>
+        <h2 class="section-title">Everything You Need<br>to Make the Switch</h2>
+      </div>
+      <p class="section-subtitle" style="margin-top:0;">A complete professional program combining technical skills, real-world projects, and career placement support.</p>
     </div>
-
-    <!-- Cards -->
-    <div class="grid md:grid-cols-2 gap-10">
-
-      <!-- Card 1: Non-Tech -->
-      <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all bg-white">
-        <div class="bg-[#00B0F0] p-5 border-l-4 border-[#8BC53F]">
-          <h4 class="text-xl font-semibold text-white">Non-Technical to Analytics Professional</h4>
-        </div>
-        <div class="p-6">
-          <p class="text-gray-600 mb-5">Designed for professionals from finance, operations, marketing, and other non-technical backgrounds to transition into analytics roles.</p>
-          <ul class="space-y-3">
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Focus on business analytics fundamentals</span>
-            </li>
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Leverage existing domain expertise</span>
-            </li>
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-blue-100 text-[#00B0F0] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Excel, SQL, and visualization tools</span>
-            </li>
-          </ul>
-        </div>
+    <div class="overview-cards">
+      <div class="ov-card blue">
+        <div class="ov-icon blue">📚</div>
+        <h4>Comprehensive Curriculum</h4>
+        <p>Industry-aligned content covering Excel, SQL, Power BI, Python, and AI — built with input from hiring managers at top companies.</p>
+        <span class="ov-card-tag blue">12 Modules</span>
       </div>
-
-      <!-- Card 2: IT Pro -->
-      <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all bg-white">
-        <div class="bg-[#F58025] p-5 border-l-4 border-[#00B0F0]">
-          <h4 class="text-xl font-semibold text-white">IT Professional to Data Specialist</h4>
-        </div>
-        <div class="p-6">
-          <p class="text-gray-600 mb-5">Tailored for IT professionals looking to specialize in high-growth data fields such as business intelligence and data engineering.</p>
-          <ul class="space-y-3">
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Advanced data modeling and engineering</span>
-            </li>
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Python programming for analytics</span>
-            </li>
-            <li class="flex items-start">
-              <div class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-100 text-[#F58025] mr-3">✓</div>
-              <span class="text-sm text-gray-700">Data infrastructure and architecture</span>
-            </li>
-          </ul>
-        </div>
+      <div class="ov-card orange">
+        <div class="ov-icon orange">🚀</div>
+        <h4>Career Development</h4>
+        <p>Resume optimization, 1-on-1 mentoring, mock interviews, and direct introductions to our network of 180+ hiring partners.</p>
+        <span class="ov-card-tag orange">Guaranteed Placement</span>
       </div>
-
+      <div class="ov-card green">
+        <div class="ov-icon green">🌐</div>
+        <h4>Industry Connections</h4>
+        <p>Exclusive access to employer partnerships, industry webinars, alumni network, and monthly career fairs with top recruiters.</p>
+        <span class="ov-card-tag green">180+ Partners</span>
+      </div>
     </div>
   </div>
 </section>
 
- <!-- Call to Action with Colgstack Theme -->
-<section class="py-16 bg-gradient-to-r from-[#00B0F0] to-[#8BC53F]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h3 class="text-3xl font-extrabold text-white mb-6">🚀 Start Your Professional Analytics Journey Today</h3>
-    <p class="text-white/90 mb-8 max-w-2xl mx-auto text-lg">Join thousands of professionals who have successfully transitioned into rewarding data analytics careers through our structured program.</p>
-    
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="#" class="bg-white text-[#00B0F0] px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-100 transition">📩 Request Program Details</a>
-      <a href="#" class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#00B0F0] transition">📞 Schedule a Consultation</a>
+<!-- Curriculum -->
+<section class="curriculum-section" id="curriculum">
+  <div class="curriculum-inner">
+    <div class="curr-header">
+      <div class="section-label">Curriculum</div>
+      <h2 class="section-title">Structured Learning Pathway</h2>
+      <p class="section-subtitle" style="margin: 0.75rem auto 0; text-align:center;">From foundations to advanced analytics — every module is hands-on and project-driven</p>
     </div>
-  </div>
-</section>
-
-
-  <!-- Footer -->
-  <footer class="bg-secondary-dark text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-4 gap-8">
-        <div>
-          <h4 class="text-lg font-semibold mb-4">StudyLMS</h4>
-          <p class="text-gray-300 text-sm">Empowering professionals to transition into data analytics careers through structured learning and career support.</p>
-        </div>
-        
-        <div>
-          <h5 class="font-semibold mb-4">Programs</h5>
-          <ul class="space-y-2 text-sm text-gray-300">
-            <li><a href="#" class="hover:text-white">Data Analytics</a></li>
-            <li><a href="#" class="hover:text-white">Business Intelligence</a></li>
-            <li><a href="#" class="hover:text-white">Data Science Fundamentals</a></li>
-            <li><a href="#" class="hover:text-white">Corporate Training</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h5 class="font-semibold mb-4">Resources</h5>
-          <ul class="space-y-2 text-sm text-gray-300">
-            <li><a href="#" class="hover:text-white">Success Stories</a></li>
-            <li><a href="#" class="hover:text-white">Career Resources</a></li>
-            <li><a href="#" class="hover:text-white">Blog</a></li>
-            <li><a href="#" class="hover:text-white">Events</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h5 class="font-semibold mb-4">Contact</h5>
-          <ul class="space-y-2 text-sm text-gray-300">
-            <li>info@studylms.com</li>
-            <li>+91 22 1234 5678</li>
-            <li>Mumbai | Bangalore | Hyderabad</li>
-          </ul>
-          <div class="flex space-x-4 mt-4">
-            <a href="#" class="text-gray-300 hover:text-white">
-              <span class="sr-only">LinkedIn</span>
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
-              </svg>
-            </a>
-            <a href="#" class="text-gray-300 hover:text-white">
-              <span class="sr-only">Twitter</span>
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-              </svg>
-            </a>
-            <a href="#" class="text-gray-300 hover:text-white">
-              <span class="sr-only">YouTube</span>
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-              </svg>
-            </a>
+    <div class="modules-grid">
+      <div class="module-item">
+        <div class="module-num c1">01</div>
+        <div class="module-content">
+          <h5>Excel & Advanced Spreadsheets</h5>
+          <p>Master pivot tables, VLOOKUP, Power Query, and data modeling in Excel for real business scenarios.</p>
+          <div class="module-tags">
+            <span class="tag-pill">Excel</span>
+            <span class="tag-pill">Power Query</span>
+            <span class="tag-pill">DAX</span>
           </div>
         </div>
       </div>
-      
-      <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-sm text-gray-400">&copy; 2025 StudyLMS. All rights reserved.</p>
-        <div class="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-sm text-gray-400 hover:text-white">Privacy Policy</a>
-          <a href="#" class="text-sm text-gray-400 hover:text-white">Terms of Service</a>
-          <a href="#" class="text-sm text-gray-400 hover:text-white">Cookie Policy</a>
+      <div class="module-item">
+        <div class="module-num c2">02</div>
+        <div class="module-content">
+          <h5>SQL & Database Fundamentals</h5>
+          <p>Write complex queries, optimize performance, and extract insights from relational databases at scale.</p>
+          <div class="module-tags">
+            <span class="tag-pill">MySQL</span>
+            <span class="tag-pill">PostgreSQL</span>
+            <span class="tag-pill">Window Fns</span>
+          </div>
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num c1">03</div>
+        <div class="module-content">
+          <h5>Power BI & Data Visualization</h5>
+          <p>Build production-grade dashboards, reports, and interactive visuals that drive executive decision-making.</p>
+          <div class="module-tags">
+            <span class="tag-pill">Power BI</span>
+            <span class="tag-pill">Tableau</span>
+            <span class="tag-pill">Storytelling</span>
+          </div>
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num c3">04</div>
+        <div class="module-content">
+          <h5>Python for Analytics</h5>
+          <p>Use pandas, NumPy, and matplotlib to automate analysis, clean messy data, and build reusable pipelines.</p>
+          <div class="module-tags">
+            <span class="tag-pill">Python</span>
+            <span class="tag-pill">Pandas</span>
+            <span class="tag-pill">Seaborn</span>
+          </div>
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num c4">05</div>
+        <div class="module-content">
+          <h5>Statistics & Analytical Thinking</h5>
+          <p>Develop the statistical reasoning behind business decisions — A/B testing, regression, and forecasting.</p>
+          <div class="module-tags">
+            <span class="tag-pill">Statistics</span>
+            <span class="tag-pill">A/B Testing</span>
+            <span class="tag-pill">Regression</span>
+          </div>
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num c2">06</div>
+        <div class="module-content">
+          <h5>AI & Machine Learning Foundations</h5>
+          <p>Apply ML concepts practically — classification, clustering, and predictive modeling without deep math.</p>
+          <div class="module-tags">
+            <span class="tag-pill">Scikit-learn</span>
+            <span class="tag-pill">ML Models</span>
+            <span class="tag-pill">ChatGPT API</span>
+          </div>
         </div>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <!-- Newsletter Signup -->
-  <section class="fixed bottom-0 right-0 m-6 z-50" id="newsletter-popup">
-    <div class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-md">
-      <div class="flex justify-between items-start mb-3">
-        <h5 class="font-semibold text-secondary-dark">Stay Updated</h5>
-        <button onclick="document.getElementById('newsletter-popup').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+<!-- Roadmap -->
+<section class="roadmap-section" id="roadmap">
+  <div class="roadmap-inner">
+    <div class="roadmap-header">
+      <div class="section-label" style="justify-content:center;">Career Journey</div>
+      <h2 class="section-title">Your Path to<br>a New Career</h2>
+      <p class="section-subtitle" style="margin: 0.75rem auto 0; text-align:center;">A proven 6-stage roadmap from learning to landing your ideal analytics role</p>
+    </div>
+    <div class="roadmap-timeline">
+      <div class="roadmap-step">
+        <div class="step-node s1">01</div>
+        <div class="step-title">Foundation Skills</div>
+        <div class="step-desc">Core tools & analytical thinking</div>
       </div>
-      <p class="text-secondary text-sm mb-3">Subscribe to receive program updates and analytics industry insights.</p>
-      <div class="flex">
-        <input type="email" placeholder="Enter your email" class="flex-grow px-3 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-1 focus:ring-primary" />
-        <button class="bg-primary text-white px-4 py-2 rounded-r hover:bg-primary-dark transition-colors">Subscribe</button>
+      <div class="roadmap-step">
+        <div class="step-node s2">02</div>
+        <div class="step-title">Project Portfolio</div>
+        <div class="step-desc">Real-world industry projects</div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-node s3">03</div>
+        <div class="step-title">Technical Skills</div>
+        <div class="step-desc">Assessments & mock tests</div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-node s4">04</div>
+        <div class="step-title">Interview Prep</div>
+        <div class="step-desc">Mock rounds with feedback</div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-node s5">05</div>
+        <div class="step-title">Job Applications</div>
+        <div class="step-desc">Strategic outreach & referrals</div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-node s6">
+          <svg width="22" height="22" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        </div>
+        <div class="step-title">Career Launch</div>
+        <div class="step-desc">Land your analytics role</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- Career Paths -->
+<section class="paths-section" id="paths">
+  <div class="paths-inner">
+    <div class="paths-header">
+      <div class="section-label">Tracks</div>
+      <h2 class="section-title">Choose Your<br>Transition Path</h2>
+      <p class="section-subtitle">Tailored learning tracks based on your background and where you want to go</p>
+    </div>
+    <div class="paths-grid">
+      <div class="path-card">
+        <div class="path-card-head blue">
+          <div class="path-eyebrow">Track 01</div>
+          <h4>Non-Technical to Analytics Professional</h4>
+          <div class="path-card-head-icon">📊</div>
+        </div>
+        <div class="path-card-body">
+          <p>Built for finance, ops, marketing, and HR professionals who want to leverage their domain expertise in a data-driven analytics role.</p>
+          <div class="path-feature">
+            <div class="path-feature-dot blue">✓</div>
+            <span>Business analytics fundamentals from scratch</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot blue">✓</div>
+            <span>Domain-specific case studies in your field</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot blue">✓</div>
+            <span>Excel, SQL, and Power BI mastery</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot blue">✓</div>
+            <span>Leverage existing domain expertise</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-card">
+        <div class="path-card-head orange">
+          <div class="path-eyebrow">Track 02</div>
+          <h4>IT Professional to Data Specialist</h4>
+          <div class="path-card-head-icon">💻</div>
+        </div>
+        <div class="path-card-body">
+          <p>For developers, sysadmins, and IT professionals aiming to pivot into high-growth data engineering, BI, or data science roles.</p>
+          <div class="path-feature">
+            <div class="path-feature-dot orange">✓</div>
+            <span>Advanced data modeling & engineering</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot orange">✓</div>
+            <span>Python programming for analytics pipelines</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot orange">✓</div>
+            <span>Cloud data platforms (Azure, GCP basics)</span>
+          </div>
+          <div class="path-feature">
+            <div class="path-feature-dot orange">✓</div>
+            <span>Data infrastructure & architecture concepts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-inner">
+    <div class="section-label" style="justify-content:center;">Get Started</div>
+    <h3>Begin Your <span>Analytics</span><br>Journey Today</h3>
+    <p>Join over 4,200 professionals who've successfully transitioned into rewarding data analytics careers through our structured, mentor-led program.</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn-cta-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
+        Enroll Now
+      </a>
+      <a href="#" class="btn-cta-secondary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Schedule a Call
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo" style="display:inline-flex;">
+          <div class="logo-mark"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white;"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm13 0a4 4 0 100 8 4 4 0 000-8z"/></svg></div>
+          <span class="logo-text" style="color:white;">Data<span>Pro</span></span>
+        </a>
+        <p>Empowering professionals across India to transition into high-growth data analytics careers through structured learning and career mentorship.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">𝕏</a>
+          <a href="#" class="social-btn">▶</a>
+          <a href="#" class="social-btn">ig</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h6>Programs</h6>
+        <ul>
+          <li><a href="#">Data Analytics</a></li>
+          <li><a href="#">Business Intelligence</a></li>
+          <li><a href="#">Data Science</a></li>
+          <li><a href="#">Corporate Training</a></li>
+          <li><a href="#">AI Essentials</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Resources</h6>
+        <ul>
+          <li><a href="#">Success Stories</a></li>
+          <li><a href="#">Career Blog</a></li>
+          <li><a href="#">Free Masterclasses</a></li>
+          <li><a href="#">Alumni Network</a></li>
+          <li><a href="#">Events</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Contact</h6>
+        <ul>
+          <li><span>info@datapro.in</span></li>
+          <li><span>+91 98765 43210</span></li>
+          <li><span>Mumbai</span></li>
+          <li><span>Bengaluru</span></li>
+          <li><span>Hyderabad</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 DataPro. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Newsletter Popup -->
+<div class="newsletter-popup" id="newsletterPopup">
+  <div class="popup-header">
+    <div class="popup-title-wrap">
+      <div class="popup-eyebrow">Stay Ahead</div>
+      <div class="popup-title">Get Analytics Insights 📬</div>
+    </div>
+    <button class="popup-close" id="popupClose">✕</button>
+  </div>
+  <p class="popup-desc">Weekly tips on data careers, tool tutorials, and exclusive job opportunities — no spam, unsubscribe anytime.</p>
+  <div class="popup-form">
+    <input type="email" placeholder="your@email.com" />
+    <button>Subscribe</button>
+  </div>
+</div>
+
 <script>
-  // tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#00AEEF',
-        secondary: '#F7941D',
-        accent: '#8DC63F',
-        'secondary-dark': '#333333',
-        'secondary-light': '#FFF7F0',
-      },
-    },
-  },
-};
+  // Header scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('main-header').classList.toggle('scrolled', window.scrollY > 20);
+  });
 
+  // Popup close
+  document.getElementById('popupClose').addEventListener('click', () => {
+    document.getElementById('newsletterPopup').style.display = 'none';
+  });
+
+  // Typing animation
+  const words = ['Data Analytics', 'Power BI', 'Python', 'SQL', 'AI & ML'];
+  let wordIdx = 0, charIdx = 0, deleting = false;
+  const el = document.getElementById('typing-text');
+
+  function type() {
+    const word = words[wordIdx];
+    el.textContent = deleting ? word.substring(0, --charIdx) : word.substring(0, ++charIdx);
+    if (!deleting && charIdx === word.length) {
+      setTimeout(() => { deleting = true; setTimeout(type, 60); }, 1400);
+    } else if (deleting && charIdx === 0) {
+      deleting = false;
+      wordIdx = (wordIdx + 1) % words.length;
+      setTimeout(type, 400);
+    } else {
+      setTimeout(type, deleting ? 50 : 110);
+    }
+  }
+  setTimeout(type, 600);
+
+  // Animate progress bars on scroll
+  const bars = document.querySelectorAll('.prog-fill');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.style.width; // trigger
+      }
+    });
+  }, { threshold: 0.3 });
+  bars.forEach(b => observer.observe(b));
 </script>
 </body>
 </html>
-
-

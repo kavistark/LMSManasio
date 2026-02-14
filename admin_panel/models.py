@@ -109,31 +109,88 @@ class CourseFolder(models.Model):
 # =====================================================
 # 📄 COURSE MATERIAL
 # =====================================================
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+from urllib.parse import urlparse, parse_qs
+
 
 class CourseMaterial(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="materials")
-    folder = models.ForeignKey(CourseFolder, on_delete=models.SET_NULL, null=True, blank=True)
+    course = models.ForeignKey(
+        "Course",
+        on_delete=models.CASCADE,
+        related_name="materials"
+    )
 
-    file = models.FileField(upload_to="materials/", null=True, blank=True)
+    folder = models.ForeignKey(
+        "CourseFolder",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    file = models.FileField(
+        upload_to="materials/",
+        null=True,
+        blank=True
+    )
+
     link = models.URLField(blank=True)
 
     type = models.CharField(
         max_length=10,
-        choices=[("video", "Video"), ("material", "Material")],
+        choices=[
+            ("video", "Video"),
+            ("material", "Material")
+        ],
         default="material",
     )
 
     title = models.CharField(max_length=255, blank=True)
+
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
+    # =====================================================
+    # 🔥 SMART LINK CONVERSION
+    # =====================================================
     def save(self, *args, **kwargs):
+
         if self.link:
-            if "youtube.com/watch?v=" in self.link:
-                self.link = self.link.replace("watch?v=", "embed/")
-            elif "youtu.be/" in self.link:
-                self.link = self.link.replace("youtu.be/", "www.youtube.com/embed/")
-            elif "drive.google.com/file/d/" in self.link and "/view" in self.link:
-                self.link = self.link.replace("/view", "/preview")
+            parsed = urlparse(self.link)
+            video_id = None
+
+            # =========================
+            # 🎥 YOUTUBE HANDLING
+            # =========================
+
+            # youtube.com/watch?v=
+            if "youtube.com" in parsed.netloc and parsed.path == "/watch":
+                query_params = parse_qs(parsed.query)
+                video_id = query_params.get("v", [None])[0]
+
+            # youtu.be short link
+            elif "youtu.be" in parsed.netloc:
+                video_id = parsed.path.lstrip("/")
+
+            # embed link
+            elif "youtube.com" in parsed.netloc and "/embed/" in parsed.path:
+                video_id = parsed.path.split("/embed/")[-1]
+
+            # shorts link
+            elif "youtube.com" in parsed.netloc and "/shorts/" in parsed.path:
+                video_id = parsed.path.split("/shorts/")[-1]
+
+            if video_id:
+                video_id = video_id.split("?")[0]
+                video_id = video_id.split("&")[0]
+                self.link = f"https://www.youtube.com/embed/{video_id}"
+
+            # =========================
+            # 📁 GOOGLE DRIVE HANDLING
+            # =========================
+            elif "drive.google.com" in parsed.netloc:
+                if "/file/d/" in parsed.path:
+                    file_id = parsed.path.split("/file/d/")[-1].split("/")[0]
+                    self.link = f"https://drive.google.com/file/d/{file_id}/preview"
 
         super().save(*args, **kwargs)
 

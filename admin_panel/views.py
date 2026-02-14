@@ -375,20 +375,52 @@ def delete_course_view(request, course_code):
         messages.success(request, "Course deleted successfully.")
     return redirect("manage_courses")
 
-def convert_youtube_link(link):
+
+
+from urllib.parse import urlparse, parse_qs
+
+def convert_video_link(link):
     if not link:
         return link
 
-    if "watch?v=" in link:
-        vid = link.split("watch?v=")[-1].split("&")[0]
-        return f"https://www.youtube.com/embed/{vid}"
+    parsed = urlparse(link)
+    video_id = None
 
-    if "youtu.be/" in link:
-        vid = link.split("youtu.be/")[-1].split("?")[0]
-        return f"https://www.youtube.com/embed/{vid}"
+    # =========================
+    # 🎥 YOUTUBE HANDLING
+    # =========================
+
+    # youtube.com/watch?v=
+    if "youtube.com" in parsed.netloc and parsed.path == "/watch":
+        query_params = parse_qs(parsed.query)
+        video_id = query_params.get("v", [None])[0]
+
+    # youtu.be short link
+    elif "youtu.be" in parsed.netloc:
+        video_id = parsed.path.lstrip("/")
+
+    # embed link
+    elif "youtube.com" in parsed.netloc and "/embed/" in parsed.path:
+        video_id = parsed.path.split("/embed/")[-1]
+
+    # shorts link
+    elif "youtube.com" in parsed.netloc and "/shorts/" in parsed.path:
+        video_id = parsed.path.split("/shorts/")[-1]
+
+    if video_id:
+        video_id = video_id.split("?")[0]
+        video_id = video_id.split("&")[0]
+        return f"https://www.youtube.com/embed/{video_id}"
+
+    # =========================
+    # 📁 GOOGLE DRIVE HANDLING
+    # =========================
+    if "drive.google.com" in parsed.netloc:
+        if "/file/d/" in parsed.path:
+            file_id = parsed.path.split("/file/d/")[-1].split("/")[0]
+            return f"https://drive.google.com/file/d/{file_id}/preview"
 
     return link
-
 
 @admin_required
 def upload_course_material(request, course_id):
@@ -407,19 +439,23 @@ def upload_course_material(request, course_id):
 
         folder = get_object_or_404(CourseFolder, id=folder_id, course=course)
 
-        if mat_type == "video" and not link:
-            messages.error(request, "YouTube link required.")
-            return redirect("manage_course", course_code=course.code)
+        if mat_type == "video":
+            if not link:
+                messages.error(request, "Video link required.")
+                return redirect("manage_course", course_code=course.code)
 
-        if mat_type == "material" and not file:
-            messages.error(request, "File upload required.")
-            return redirect("manage_course", course_code=course.code)
+            link = convert_video_link(link)
+
+        if mat_type == "material":
+            if not file and not link:
+                messages.error(request, "Upload file or provide link.")
+                return redirect("manage_course", course_code=course.code)
 
         CourseMaterial.objects.create(
             course=course,
             folder=folder,
             title=title,
-            link=convert_youtube_link(link) if mat_type == "video" else link,
+            link=link,
             type=mat_type,
             file=file,
         )
@@ -428,6 +464,10 @@ def upload_course_material(request, course_id):
         return redirect("manage_course", course_code=course.code)
 
     return redirect("manage_courses")
+
+
+
+
 
 # =====================================================
 # 📁 COURSE FOLDER / MATERIAL
@@ -449,46 +489,6 @@ def create_folder(request, course_id):
 
         CourseFolder.objects.create(course=course, name=name, type=folder_type)
         messages.success(request, "Folder created successfully.")
-        return redirect("manage_course", course_code=course.code)
-
-    return redirect("manage_courses")
-
-
-@admin_required
-def upload_course_material(request, course_id):
-    if request.method == "POST":
-        course = get_object_or_404(Course, id=course_id)
-
-        folder_id = request.POST.get("folder_id")
-        title = (request.POST.get("title") or "").strip()
-        link = (request.POST.get("link") or "").strip()
-        mat_type = request.POST.get("type")  # 'video' or 'material'
-
-        if not folder_id:
-            messages.error(request, "Folder is required.")
-            return redirect("manage_course", course_code=course.code)
-
-        folder = get_object_or_404(CourseFolder, id=folder_id, course=course)
-
-        if mat_type not in ["video", "material"]:
-            messages.error(request, "Invalid material type.")
-            return redirect("manage_course", course_code=course.code)
-
-        if not link and not request.FILES.get("file"):
-            messages.error(request, "Provide a link or upload a file.")
-            return redirect("manage_course", course_code=course.code)
-
-        material = CourseMaterial(
-            course=course,
-            folder=folder,
-            title=title,
-            link=link,
-            type=mat_type,
-            file=request.FILES.get("file"),
-        )
-        material.save()
-
-        messages.success(request, "Material uploaded successfully.")
         return redirect("manage_course", course_code=course.code)
 
     return redirect("manage_courses")
@@ -747,8 +747,6 @@ def calendar_event_view(request):
 
 @admin_required
 def edit_course_material(request, material_id):
-    if not request.session.get('is_authenticated'):
-        return redirect('login')
 
     material = get_object_or_404(CourseMaterial, id=material_id)
     course_code = material.course.code
@@ -757,8 +755,8 @@ def edit_course_material(request, material_id):
         material.title = request.POST.get("title")
         material.link = request.POST.get("link")
 
-        # 🔴 IMPORTANT FIX
-        material.type = material.type   # keep existing value
+        if material.type == "video":
+            material.link = convert_youtube_link(material.link)
 
         material.save()
         return redirect('manage_course', course_code=course_code)
