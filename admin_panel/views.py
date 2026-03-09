@@ -118,7 +118,7 @@ def admin_dashboard(request):
         "admin_name": request.session.get("admin_username"),
     }
 
-    return render(request, "admin_panel\partials\dashboard.html", context)
+    return render(request, "admin_panel/partials/dashboard.html", context)
 
 
 # =====================================================
@@ -661,7 +661,7 @@ def delete_job_view(request, job_id):
 # 📅 CALENDAR
 # =====================================================
 @admin_required
-def calendar_event_view(request):
+def calendar_event_view1(request):
     """
     Supports Create / Edit / Delete from the same form.
     Frontend sends:
@@ -673,7 +673,11 @@ def calendar_event_view(request):
     if request.method == "POST":
         event_id = request.POST.get("event-id")
         title = request.POST.get("title", "")
-        course = request.POST.get("course", "")  # kept as string to match your model
+        course_code = request.POST.get("course")
+        course = None
+
+        if course_code:
+            course = Course.objects.filter(code=course_code).first()
         description = request.POST.get("description", "")
         meeting_link = request.POST.get("meeting-link", "")
         start_raw = request.POST.get("start")
@@ -713,14 +717,14 @@ def calendar_event_view(request):
         else:
             if start_dt:
                 CalendarEvent.objects.create(
-                    title=title,
-                    course=course or "All Courses",
-                    description=description,
-                    meeting_link=meeting_link or None,
-                    start=start_dt,
-                    end=end_dt,
-                    all_day=all_day,
-                )
+                title=title,
+                course=course,
+                description=description,
+                meeting_link=meeting_link or None,
+                start=start_dt,
+                end=end_dt,
+                all_day=all_day,
+            )
 
     # Build event_list for template
     events = CalendarEvent.objects.all().order_by("start")
@@ -746,6 +750,117 @@ def calendar_event_view(request):
     )
 
 @admin_required
+def calendar_event_view(request):
+    if request.method == "POST":
+        event_id = request.POST.get('event-id')
+        title = request.POST.get('title')
+        course = request.POST.get('course')
+        description = request.POST.get('description')
+        meeting_link = request.POST.get('meeting-link')
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        all_day = request.POST.get('allDay')
+        edit = request.POST.get('edit')
+        delete = request.POST.get('delete')
+        print(course)
+        # if len(start) != len('2025-06-17T08:00:00+05:30'):
+        #     start=start + 'T00:00:00+00:00'
+        #     end=end + 'T00:00:00+00:00'
+
+        if all_day == "true":
+            all_day = True
+            start = start + 'T00:00:00+00:00'
+            end = end + 'T00:00:00+00:00'
+        else:
+            all_day = False
+
+        if delete == "true":
+            print(event_id)
+            CalendarEvent.objects.filter(id=event_id).delete()
+        elif edit == "true":
+            event = CalendarEvent.objects.filter(id=event_id).first()
+            if event:
+                event.title = title
+                event.course = course
+                event.description = description
+                event.meeting_link = meeting_link
+                event.start = start
+                event.end = end
+                event.all_day = all_day
+                event.save()
+        else:
+            event = CalendarEvent(title=title, course=course, description=description,
+                                  meeting_link=meeting_link, start=start, end=end, all_day=all_day)
+            event.save()
+
+
+        events = CalendarEvent.objects.all()
+
+        event_list = []
+        for event in events:
+            if event.all_day == True:
+                event_list.append({
+                    'eventId': event.id,
+                    'title': event.title,
+                    'course': event.course or "",
+                    'description': event.description or "",
+                    'meetingLink': f'{event.meeting_link}' or "",
+                    'start': event.start.isoformat(),
+                    'end': event.end.isoformat() if event.end else None,
+                    'allDay': 'true'
+                })
+            else:
+                event_list.append({
+                    'eventId': event.id,
+                    'title': event.title,
+                    'course': event.course or "",
+                    'description': event.description or "",
+                    'meetingLink': f'{event.meeting_link}' or "",
+                    'start': event.start.isoformat(),
+                    'end': event.end.isoformat() if event.end else None
+                })
+
+        return render(request,'admin_panel/partials/calendar.html', {'events': event_list, 'courses': Course.objects.all()})
+
+
+    events = CalendarEvent.objects.all()
+    
+    event_list = []
+
+    if events == []:
+        pass
+    else:
+        for event in events:
+            if event.all_day == True:
+                event_list.append({
+                    'eventId': event.id,    
+                    'title': event.title,
+                    'course': event.course or "",
+                    'description': event.description or "",
+                    'meetingLink': f'{event.meeting_link}' or "",
+                    'start': event.start.isoformat(),
+                    'end': event.end.isoformat() if event.end else None,
+                    'allDay': 'true'
+                })
+            else:
+                event_list.append({
+                    'eventId': event.id,
+                    'title': event.title,
+                    'course': event.course or "",
+                    'description': event.description or "",
+                    'meetingLink': f'{event.meeting_link}' or "",
+                    'start': event.start.isoformat(),
+                    'end': event.end.isoformat() if event.end else None
+                })
+
+    ''' By default, Django automatically adds a field called 'id' which is an 'AutoField' primary key 
+    for every model (unless you override it). '''
+
+    return render(request,'admin_panel/partials/calendar.html', {'events': event_list, 'courses': Course.objects.all()})
+ 
+
+
+@admin_required
 def edit_course_material(request, material_id):
 
     material = get_object_or_404(CourseMaterial, id=material_id)
@@ -756,10 +871,12 @@ def edit_course_material(request, material_id):
         material.link = request.POST.get("link")
 
         if material.type == "video":
-            material.link = convert_youtube_link(material.link)
+            material.link = convert_video_link(material.link)
 
         material.save()
-        return redirect('manage_course', course_code=course_code)
+        return redirect("manage_course", course_code=course_code)
+
+    return redirect("manage_course", course_code=course_code)
 
 # =====================================================
 # 🖼 STUDY IMAGES

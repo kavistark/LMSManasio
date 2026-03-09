@@ -245,7 +245,7 @@ class BroadcastMessage(models.Model):
 
 class CalendarEvent(models.Model):
     title = models.CharField(max_length=200)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
+    course = models.CharField(max_length=100, default='All Courses')
     description = models.TextField(blank=True, null=True)
     meeting_link = models.URLField(blank=True, null=True)
     start = models.DateTimeField()

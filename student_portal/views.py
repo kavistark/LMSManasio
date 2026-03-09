@@ -221,15 +221,20 @@ def matrical_page(request, course_id=None):
         'course': course,
     })
 
+from django.db.models import Q
 
-# ================= CALENDAR =================
 def student_calendar_view(request):
     student = get_logged_in_student(request)
     if not student:
         return redirect('student_login')
 
-    course_codes = CourseAssignment.objects.filter(student=student).values_list('course__code', flat=True)
-    events = CalendarEvent.objects.filter(course__in=course_codes)
+    course_codes = CourseAssignment.objects.filter(
+        student=student
+    ).values_list('course__code', flat=True)
+
+    events = CalendarEvent.objects.filter(
+        Q(course__in=course_codes) | Q(course="All Courses")
+    )
 
     event_list = []
     for e in events:
@@ -240,10 +245,12 @@ def student_calendar_view(request):
             'meetingLink': e.meeting_link or "",
             'start': e.start.isoformat(),
             'end': e.end.isoformat() if e.end else None,
-            'allDay': bool(e.all_day),   # ✅ FIXED
+            'allDay': bool(e.all_day),
         })
 
     return render(request, 'student_portal/cantidates/calendar.html', {
         'events': event_list,
         'student': student
     })
+
+   
